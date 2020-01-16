@@ -17,10 +17,10 @@ public class AccountCreationServiceTest {
 
     @Test
     public void accountAlreadyExist() {
-        Account accountInfo = new Account(true, 100);
+        Account accountInfo = new Account(true, 350);
         Account currentAccount = new Account(true, 100);
         Account accountResult = new AccountCreationService(currentAccount).createAccount(accountInfo);
-        Account accountExpected = Account.accountWithViolations(accountInfo);
+        Account accountExpected = Account.accountWithViolations(currentAccount);
         assertEquals(accountExpected, accountResult);
     }
 }
