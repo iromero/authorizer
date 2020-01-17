@@ -19,12 +19,22 @@ public class TransactionAuthorizationServiceTest {
         assertEquals(accountExpected, accountStatus);
     }
 
+    @Test
     public void accountNoInitialized() {
-
+        LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
+        Transaction transactionToBeApproved = new Transaction("Burger King", 20, dateTime);
+        Account accountStatus = new TransactionAuthorizationService(null, transactionToBeApproved).evalTransaction();
+        Account accountExpected = Account.accountNotInitialized();
+        assertEquals(accountExpected, accountStatus);
     }
 
-    public void carNotActive() {
-
+    public void cardNotActive() {
+        Account currentAccount = new Account(false, 100);
+        LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
+        Transaction transactionToBeApproved = new Transaction("Burger King", 20, dateTime);
+        Account accountStatus = new TransactionAuthorizationService(null, transactionToBeApproved).evalTransaction();
+        Account accountExpected = Account.accountNotInitialized();
+        assertEquals(accountExpected, accountStatus);
     }
 
     public void insufficientLimit() {

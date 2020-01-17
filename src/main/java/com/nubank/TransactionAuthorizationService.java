@@ -13,6 +13,9 @@ public class TransactionAuthorizationService {
     }
 
     public Account evalTransaction() {
+        if (currentAcccount == null) {
+            return Account.accountNotInitialized();
+        }
         return currentAcccount.debt(transactionToBeAproved);
     }
 }

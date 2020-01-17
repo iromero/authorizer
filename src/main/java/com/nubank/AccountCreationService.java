@@ -15,7 +15,7 @@ public class AccountCreationService {
         if (currentAccount == null) {
             return Account.newAccount(accountInfo);
         } else {
-            return Account.accountWithViolations(accountInfo);
+            return Account.accountWithViolations(currentAccount);
         }
     }
 
