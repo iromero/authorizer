@@ -16,8 +16,11 @@ public class TransactionAuthorizationService {
         if (currentAcccount == null) {
             return Account.accountNotInitialized();
         }
-        if(currentAcccount.isNotActive()){
+        if (currentAcccount.isNotActive()) {
             return Account.accountWithCardNotActive(currentAcccount);
+        }
+        if (currentAcccount.isNotThereSuffientLimit(transactionToBeAproved.getAmount())) {
+            return Account.accountWithInsuficientLimits(currentAcccount);
         }
         return currentAcccount.debt(transactionToBeAproved);
     }

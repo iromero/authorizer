@@ -55,6 +55,11 @@ public final class Account {
         return new Account(currentAccount, violations);
     }
 
+    public static Account accountWithInsuficientLimits(Account currentAccount) {
+        List<String> violations = Arrays.asList("insuficient-limit");
+        return new Account(currentAccount, violations);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -76,5 +81,9 @@ public final class Account {
 
     public boolean isNotActive() {
         return !activeCard;
+    }
+
+    public boolean isNotThereSuffientLimit(int amount) {
+        return availableLimit < amount;
     }
 }

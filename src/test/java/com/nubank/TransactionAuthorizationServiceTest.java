@@ -38,8 +38,14 @@ public class TransactionAuthorizationServiceTest {
         assertEquals(accountExpected, accountStatus);
     }
 
+    @Test
     public void insufficientLimit() {
-
+        Account currentAccount = new Account(true, 80);
+        LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
+        Transaction transactionToBeApproved = new Transaction("Burger King", 90, dateTime);
+        Account accountStatus = new TransactionAuthorizationService(currentAccount, transactionToBeApproved).evalTransaction();
+        Account accountExpected = Account.accountWithInsuficientLimits(currentAccount);
+        assertEquals(accountExpected, accountStatus);
     }
 
     public void highFrequencySmallInterval() {
