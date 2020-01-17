@@ -50,6 +50,11 @@ public final class Account {
         return new Account(false, 0, violations);
     }
 
+    public static Account accountWithCardNotActive(Account currentAccount) {
+        List<String> violations = Arrays.asList("card-not-active");
+        return new Account(currentAccount, violations);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -67,5 +72,9 @@ public final class Account {
 
     public Account debt(Transaction transactionToBeAproved) {
         return new Account(activeCard, availableLimit - transactionToBeAproved.getAmount());
+    }
+
+    public boolean isNotActive() {
+        return !activeCard;
     }
 }
