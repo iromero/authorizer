@@ -63,7 +63,6 @@ public final class Account {
         return new Account(this, violations);
     }
 
-
     public Account accountWithDoubleTransaction() {
         List<String> violations = List.of("double-transaction");
         return new Account(this, violations);
