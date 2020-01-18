@@ -9,7 +9,7 @@ public final class Account {
 
     private final boolean activeCard;
     private final int availableLimit;
-    private final List<String> violations;
+    private List<String> violations;
 
     public Account(boolean activeCard, int availableLimit) {
         this.activeCard = activeCard;
@@ -40,9 +40,9 @@ public final class Account {
         return new Account(accountInfo);
     }
 
-    public static Account accountWithViolations(Account accountInfo) {
+    public Account accountWithViolations() {
         List<String> violations = Arrays.asList("account-already-initialized");
-        return new Account(accountInfo, violations);
+        return new Account(this, violations);
     }
 
     public static Account accountNotInitialized() {
@@ -50,14 +50,24 @@ public final class Account {
         return new Account(false, 0, violations);
     }
 
-    public static Account accountWithCardNotActive(Account currentAccount) {
+    public Account accountWithCardNotActive() {
         List<String> violations = Arrays.asList("card-not-active");
-        return new Account(currentAccount, violations);
+        return new Account(this, violations);
     }
 
-    public static Account accountWithInsuficientLimits(Account currentAccount) {
+    public Account accountWithInsuficientLimits() {
         List<String> violations = Arrays.asList("insuficient-limit");
-        return new Account(currentAccount, violations);
+        return new Account(this, violations);
+    }
+
+    public Account accountWithDoubleTransaction() {
+        List<String> violations = Arrays.asList("double-transaction");
+        return new Account(this, violations);
+    }
+
+    public Account accountWithHighFrequencySmallInterval() {
+        List<String> violations = Arrays.asList("high-frequency-small-interval");
+        return new Account(this, violations);
     }
 
     @Override
@@ -83,7 +93,20 @@ public final class Account {
         return !activeCard;
     }
 
-    public boolean isNotThereSuffientLimit(int amount) {
+    public boolean isNotThereSufficientLimit(int amount) {
         return availableLimit < amount;
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "activeCard=" + activeCard +
+                ", availableLimit=" + availableLimit +
+                ", violations=" + violations +
+                '}';
+    }
+
+    public boolean hasViolations() {
+        return violations.size() > 0;
     }
 }

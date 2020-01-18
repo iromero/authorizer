@@ -1,15 +1,19 @@
 package com.nubank;
 
-import java.time.LocalDateTime;
+import java.time.Duration;
+import java.util.List;
 
 public class TransactionAuthorizationService {
 
     private final Account currentAcccount;
-    private final Transaction transactionToBeAproved;
+    private final List<Transaction> transactionsApproved;
+    private final Transaction transactionToBeApproved;
 
-    public TransactionAuthorizationService(Account currentAcccount, Transaction transactionToBeAproved) {
+    public TransactionAuthorizationService(Account currentAcccount, List<Transaction> transactionsApproved,
+                                           Transaction transactionToBeAproved) {
         this.currentAcccount = currentAcccount;
-        this.transactionToBeAproved = transactionToBeAproved;
+        this.transactionsApproved = transactionsApproved;
+        this.transactionToBeApproved = transactionToBeAproved;
     }
 
     public Account evalTransaction() {
@@ -17,11 +21,41 @@ public class TransactionAuthorizationService {
             return Account.accountNotInitialized();
         }
         if (currentAcccount.isNotActive()) {
-            return Account.accountWithCardNotActive(currentAcccount);
+            return currentAcccount.accountWithCardNotActive();
         }
-        if (currentAcccount.isNotThereSuffientLimit(transactionToBeAproved.getAmount())) {
-            return Account.accountWithInsuficientLimits(currentAcccount);
+        if (currentAcccount.isNotThereSufficientLimit(transactionToBeApproved.getAmount())) {
+            return currentAcccount.accountWithInsuficientLimits();
         }
-        return currentAcccount.debt(transactionToBeAproved);
+        if (doesItViolatesDoubleTransaction()) {
+            return currentAcccount.accountWithDoubleTransaction();
+        }
+        if (doesItViolatesHighFrecuencySmallInterval()) {
+            return currentAcccount.accountWithHighFrequencySmallInterval();
+        }
+        return currentAcccount.debt(transactionToBeApproved);
     }
+
+    public boolean doesItViolatesDoubleTransaction() {
+        for (Transaction transactionApproved : transactionsApproved) {
+            Duration duration = Duration.between(transactionApproved.getTime(), transactionToBeApproved.getTime()).abs();
+            if (transactionApproved.equals(transactionToBeApproved) && duration.getSeconds() <= 120) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean doesItViolatesHighFrecuencySmallInterval() {
+        int numberOfTransactionsInLessThanTwoMinutes = 0;
+        for (Transaction transactionApproved : transactionsApproved) {
+            Duration duration = Duration.between(transactionApproved.getTime(), transactionToBeApproved.getTime()).abs();
+            if (duration.getSeconds() <= 120) {
+                numberOfTransactionsInLessThanTwoMinutes++;
+            }
+        }
+        // Number of already transactions approved in less than two minutes taking as reference the incoming transaction.
+        return (numberOfTransactionsInLessThanTwoMinutes >= 3);
+    }
+
+
 }

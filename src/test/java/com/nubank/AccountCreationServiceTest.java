@@ -20,7 +20,7 @@ public class AccountCreationServiceTest {
         Account accountInfo = new Account(true, 350);
         Account currentAccount = new Account(true, 100);
         Account accountResult = new AccountCreationService(currentAccount).createAccount(accountInfo);
-        Account accountExpected = Account.accountWithViolations(currentAccount);
+        Account accountExpected = currentAccount.accountWithViolations();
         assertEquals(accountExpected, accountResult);
     }
 }
