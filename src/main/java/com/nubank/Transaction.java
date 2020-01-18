@@ -10,7 +10,7 @@ public class Transaction {
     private final String merchant;
     private final int amount;
     private final LocalDateTime time;
-    private List<String> violations;
+    private final List<String> violations;
 
     public Transaction(String merchant, int amount, LocalDateTime time) {
         this.merchant = merchant;
@@ -25,10 +25,6 @@ public class Transaction {
 
     public LocalDateTime getTime() {
         return time;
-    }
-
-    public List<String> getViolations() {
-        return violations;
     }
 
     @Override

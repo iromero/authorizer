@@ -8,7 +8,7 @@ public final class Account {
 
     private final boolean activeCard;
     private final int availableLimit;
-    private List<String> violations;
+    private final List<String> violations;
 
     public Account(boolean activeCard, int availableLimit) {
         this.activeCard = activeCard;
