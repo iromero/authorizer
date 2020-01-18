@@ -1,7 +1,8 @@
 package com.nubank;
 
+import io.vavr.collection.List;
+
 import java.time.Duration;
-import java.util.List;
 
 public class TransactionAuthorizationService {
 
@@ -24,7 +25,7 @@ public class TransactionAuthorizationService {
             return currentAcccount.accountWithCardNotActive();
         }
         if (currentAcccount.isNotThereSufficientLimit(transactionToBeApproved.getAmount())) {
-            return currentAcccount.accountWithInsuficientLimits();
+            return currentAcccount.accountWithInsufficientLimits();
         }
         if (doesItViolatesDoubleTransaction()) {
             return currentAcccount.accountWithDoubleTransaction();

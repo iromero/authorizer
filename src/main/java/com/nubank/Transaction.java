@@ -1,8 +1,8 @@
 package com.nubank;
 
+import io.vavr.collection.List;
+
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class Transaction {
@@ -16,7 +16,7 @@ public class Transaction {
         this.merchant = merchant;
         this.amount = amount;
         this.time = time;
-        this.violations = new ArrayList<String>();
+        this.violations = List.empty();
     }
 
     public int getAmount() {

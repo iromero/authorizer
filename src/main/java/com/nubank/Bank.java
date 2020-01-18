@@ -1,6 +1,7 @@
 package com.nubank;
 
-import java.util.List;
+import io.vavr.collection.List;
+
 import java.util.Scanner;
 
 public class Bank implements Runnable {

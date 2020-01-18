@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.List;
+
+import io.vavr.collection.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -17,7 +17,7 @@ public class TransactionAuthorizationServiceTest {
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
 
         Transaction transactionToBeApproved = new Transaction("Burger King", 20, dateTime);
-        Account accountStatus = new TransactionAuthorizationService(currentAccount, new ArrayList<>(),
+        Account accountStatus = new TransactionAuthorizationService(currentAccount, List.empty(),
                 transactionToBeApproved).evalTransaction();
         Account accountExpected = new Account(true, 80);
 
@@ -28,7 +28,7 @@ public class TransactionAuthorizationServiceTest {
     public void accountNoInitialized() {
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionToBeApproved = new Transaction("Burger King", 20, dateTime);
-        Account accountStatus = new TransactionAuthorizationService(null, new ArrayList<Transaction>(),
+        Account accountStatus = new TransactionAuthorizationService(null, List.empty(),
                 transactionToBeApproved).evalTransaction();
         Account accountExpected = Account.accountNotInitialized();
         assertEquals(accountExpected, accountStatus);
@@ -39,7 +39,7 @@ public class TransactionAuthorizationServiceTest {
         Account currentAccount = new Account(false, 100);
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionToBeApproved = new Transaction("Burger King", 20, dateTime);
-        Account accountStatus = new TransactionAuthorizationService(currentAccount, new ArrayList<Transaction>(),
+        Account accountStatus = new TransactionAuthorizationService(currentAccount, List.empty(),
                 transactionToBeApproved).evalTransaction();
         Account accountExpected = currentAccount.accountWithCardNotActive();
         assertEquals(accountExpected, accountStatus);
@@ -50,9 +50,9 @@ public class TransactionAuthorizationServiceTest {
         Account currentAccount = new Account(true, 80);
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionToBeApproved = new Transaction("Burger King", 90, dateTime);
-        Account accountStatus = new TransactionAuthorizationService(currentAccount, new ArrayList<Transaction>(),
+        Account accountStatus = new TransactionAuthorizationService(currentAccount, List.empty(),
                 transactionToBeApproved).evalTransaction();
-        Account accountExpected = currentAccount.accountWithInsuficientLimits();
+        Account accountExpected = currentAccount.accountWithInsufficientLimits();
         assertEquals(accountExpected, accountStatus);
     }
 
@@ -85,8 +85,6 @@ public class TransactionAuthorizationServiceTest {
     }
 
     private List<Transaction> getApprovedTransactions() {
-        List<Transaction> approvedTransactions = new ArrayList<Transaction>();
-
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionApproved1 = new Transaction("Burger King", 20, dateTime);
 
@@ -96,9 +94,7 @@ public class TransactionAuthorizationServiceTest {
         LocalDateTime dateTime3 = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 1, 55, 0);
         Transaction transactionApproved3 = new Transaction("Presto", 20, dateTime3);
 
-        approvedTransactions.add(transactionApproved1);
-        approvedTransactions.add(transactionApproved2);
-        approvedTransactions.add(transactionApproved3);
+        List<Transaction> approvedTransactions = List.of(transactionApproved1, transactionApproved2, transactionApproved3);
 
         return approvedTransactions;
     }
