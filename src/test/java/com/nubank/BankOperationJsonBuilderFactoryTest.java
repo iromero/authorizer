@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -26,11 +28,21 @@ public class BankOperationJsonBuilderFactoryTest {
         assertEquals(true, account.isActiveCard());
     }
 
+    @Test
+    public void testDateTimeDeserializer(){
+        String json = "{\"time\":\"2019-02-13T10:00:00.000Z\"}";
+        LocalDateTime dateTime =  LocalDateTime.parse(json,
+                DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss.nnnZ").withLocale(Locale.ENGLISH));
+        assertEquals(2009, dateTime.getYear());
+        assertEquals(02, dateTime.getMonthValue());
+    }
+
+    @Test
     public void transactionDeserializer() {
         //given
-//        String json = "{\"transaction\":{\"merchant\":\"Burger King\",\"amount\": 20,\"time\":\"2019-02-13T10:00:00.000Z\"}}";
+        String json = "{\"transaction\":{\"merchant\":\"Burger King\",\"amount\": 20,\"time\":\"2019-02-13 10:00:00.000\"}}";
 //        String json = "{\"merchant\":\"Burger King\",\"amount\":\"20\",\"time\":\"2019-02-13T10:00:00.000Z\"}";
-        String json = "{\"merchant\":\"Burger King\",\"amount\":20,\"time\":{\"date\":{\"year\":2019,\"month\":2,\"day\":13},\"time\":{\"hour\":10,\"minute\":0,\"second\":0,\"nano\":0}}}";
+//        String json = "{\"merchant\":\"Burger King\",\"amount\":20,\"time\":{\"date\":{\"year\":2019,\"month\":2,\"day\":13},\"time\":{\"hour\":10,\"minute\":0,\"second\":0,\"nano\":0}}}";
 
         //when
         BankOperation bankOperation = new BankOperationJsonBuilderFactory().fromJson(json);

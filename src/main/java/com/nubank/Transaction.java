@@ -3,27 +3,11 @@ package com.nubank;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-
 public class Transaction extends OperationInfo {
 
-    public String merchant;
-    public int amount;
-    public LocalDateTime time;
-
-    public Transaction() {
-    }
-
-    public void setMerchant(String merchant) {
-        this.merchant = merchant;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
-
-    public void setTime(LocalDateTime time) {
-        this.time = time;
-    }
+    private final String merchant;
+    private final int amount;
+    private final LocalDateTime time;
 
     public Transaction(String merchant, int amount, LocalDateTime time) {
         this.merchant = merchant;
@@ -49,11 +33,12 @@ public class Transaction extends OperationInfo {
         if (o == null || getClass() != o.getClass()) return false;
         Transaction that = (Transaction) o;
         return amount == that.amount &&
-                Objects.equals(merchant, that.merchant);
+                Objects.equals(merchant, that.merchant) &&
+                Objects.equals(time, that.time);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(merchant, amount);
+        return Objects.hash(merchant, amount, time);
     }
 }

@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.vavr.gson.VavrGson;
 
+import java.time.LocalDateTime;
+
 public class BankOperationJsonBuilderFactory {
 
     private final Gson gson;
@@ -11,6 +13,7 @@ public class BankOperationJsonBuilderFactory {
     public BankOperationJsonBuilderFactory() {
         GsonBuilder builder = new GsonBuilder();
         VavrGson.registerAll(builder);
+        builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
         gson = builder.create();
     }
 
