@@ -38,8 +38,8 @@ public class AuthorizerApplication implements Runnable {
                 BankOperationService service = new NuBankOperationService();
                 Violations violations = bankOperation.process(bank, service);
                 if (violations.hasNotViolations()) {
-                    bank = bank.update(bankOperation);
-                }else{
+                    bank = bank.update(bankOperation.getOperationInfo());
+                } else {
 //                    Account accountWithViolations;
 //                    String json;
 //                    System.out.println(json);

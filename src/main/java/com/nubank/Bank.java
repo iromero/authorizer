@@ -23,11 +23,11 @@ public class Bank {
         return approvedTransactions;
     }
 
-    public Bank update(BankOperation bankOperation) {
+    public Bank update(OperationInfo operationInfo) {
         if (currentAccount == null) {
-            return initializeAccount((Account) bankOperation);
+            return initializeAccount((Account) operationInfo);
         }
-        return updateAccountAndApprovedTransactions((Transaction) bankOperation);
+        return updateAccountAndApprovedTransactions((Transaction) operationInfo);
     }
 
     public Bank initializeAccount(Account account) {

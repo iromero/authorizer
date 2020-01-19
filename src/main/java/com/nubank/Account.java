@@ -1,25 +1,26 @@
 package com.nubank;
 
-import io.vavr.collection.List;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.Objects;
 
-public final class Account extends BankOperation {
-
+public final class Account extends OperationInfo {
+    @SerializedName("active-card")
     private final boolean activeCard;
+    @SerializedName("available-limit")
     private final int availableLimit;
-    private final List<String> violations;
 
     public Account(boolean activeCard, int availableLimit) {
         this.activeCard = activeCard;
         this.availableLimit = availableLimit;
-        this.violations = List.empty();
     }
 
-    public Account(boolean activeCard, int availableLimit, List<String> violations) {
-        this.activeCard = activeCard;
-        this.availableLimit = availableLimit;
-        this.violations = violations;
+    public boolean isActiveCard() {
+        return activeCard;
+    }
+
+    public int getAvailableLimit() {
+        return availableLimit;
     }
 
     public Account debt(Transaction transactionToBeApproved) {
@@ -40,13 +41,12 @@ public final class Account extends BankOperation {
         if (o == null || getClass() != o.getClass()) return false;
         Account account = (Account) o;
         return activeCard == account.activeCard &&
-                availableLimit == account.availableLimit &&
-                violations.equals(account.violations);
+                availableLimit == account.availableLimit;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(activeCard, availableLimit, violations);
+        return Objects.hash(activeCard, availableLimit);
     }
 
     @Override
@@ -54,12 +54,6 @@ public final class Account extends BankOperation {
         return "Account{" +
                 "activeCard=" + activeCard +
                 ", availableLimit=" + availableLimit +
-                ", violations=" + violations +
                 '}';
-    }
-
-    @Override
-    public Violations process(Bank bank, BankOperationService service) {
-        return service.processOperation(bank, this);
     }
 }

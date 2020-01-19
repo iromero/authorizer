@@ -2,13 +2,12 @@ package com.nubank;
 
 public class NuBankOperationService implements BankOperationService {
     @Override
-    public Violations processOperation(Bank bank, Account account) {
-        return new AccountCreationService(bank.getCurrentAccount()).createAccount(account);
+    public Violations processOperation(Bank bank, AccountOperation account) {
+        return null;
     }
 
     @Override
-    public Violations processOperation(Bank bank, Transaction transactionToBeApproved) {
-        return new TransactionAuthorizationService(bank.getCurrentAccount(), bank.getApprovedTransactions(),
-                transactionToBeApproved).evalTransaction();
+    public Violations processOperation(Bank bank, TransactionOperation transaction) {
+        return null;
     }
 }

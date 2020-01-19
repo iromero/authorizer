@@ -1,7 +1,7 @@
 package com.nubank;
 
 public interface BankOperationService {
-    Violations processOperation(Bank bank, Account account);
+    Violations processOperation(Bank bank, AccountOperation account);
 
-    Violations processOperation(Bank bank, Transaction transaction);
+    Violations processOperation(Bank bank, TransactionOperation transaction);
 }
