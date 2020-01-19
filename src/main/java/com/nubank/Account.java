@@ -5,7 +5,7 @@ import io.vavr.collection.List;
 
 import java.util.Objects;
 
-public final class Account extends BankOperation {
+public final class Account implements BankOperation {
 
     private final boolean activeCard;
     private final int availableLimit;
@@ -106,7 +106,13 @@ public final class Account extends BankOperation {
     }
 
     @Override
-    public void accept(TransactionVisitor visitor) {
-        visitor.visit(this);
+    public Account process(Bank bank, BankOperationService service) {
+        return service.processOperation(bank, this);
     }
+
+
+//    @Override
+//    public void accept(TransactionVisitor visitor) {
+//        visitor.visit(this);
+//    }
 }

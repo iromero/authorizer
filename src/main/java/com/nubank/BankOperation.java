@@ -1,7 +1,5 @@
 package com.nubank;
 
-import com.nubank.visitor.TransactionVisitor;
-import com.nubank.visitor.Visitable;
-
-public abstract class BankOperation implements Visitable<TransactionVisitor> {
+public interface BankOperation {
+    Account process(Bank bank, BankOperationService service);
 }

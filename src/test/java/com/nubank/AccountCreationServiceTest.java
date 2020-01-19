@@ -22,9 +22,14 @@ public class AccountCreationServiceTest {
 
     @Test
     public void accountAlreadyExist() {
+        //given
         Account accountInfo = new Account(true, 350);
         Account currentAccount = new Account(true, 100);
+
+        //when
         Account accountResult = new AccountCreationService(currentAccount).createAccount(accountInfo);
+
+        //then
         Account accountExpected = currentAccount.accountAlreadyInitialized();
         assertEquals(accountExpected, accountResult);
     }

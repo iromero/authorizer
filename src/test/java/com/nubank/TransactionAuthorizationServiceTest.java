@@ -13,74 +13,96 @@ public class TransactionAuthorizationServiceTest {
 
     @Test
     public void transactionApproved() {
+        //given
         Account currentAccount = new Account(true, 100);
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
-
         Transaction transactionToBeApproved = new Transaction("Burger King", 20, dateTime);
+
+        //when
         Account accountStatus = new TransactionAuthorizationService(currentAccount, List.empty(),
                 transactionToBeApproved).evalTransaction();
-        Account accountExpected = new Account(true, 80);
 
+        //then
+        Account accountExpected = new Account(true, 80);
         assertEquals(accountExpected, accountStatus);
     }
 
     @Test
     public void accountNoInitialized() {
+        //given
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionToBeApproved = new Transaction("Burger King", 20, dateTime);
+
+        //when
         Account accountStatus = new TransactionAuthorizationService(null, List.empty(),
                 transactionToBeApproved).evalTransaction();
+
+        //then
         Account accountExpected = Account.accountNotInitialized();
         assertEquals(accountExpected, accountStatus);
     }
 
     @Test
     public void cardNotActive() {
+        //given
         Account currentAccount = new Account(false, 100);
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionToBeApproved = new Transaction("Burger King", 20, dateTime);
+
+        //when
         Account accountStatus = new TransactionAuthorizationService(currentAccount, List.empty(),
                 transactionToBeApproved).evalTransaction();
+
+        //then
         Account accountExpected = currentAccount.accountWithCardNotActive();
         assertEquals(accountExpected, accountStatus);
     }
 
     @Test
     public void insufficientLimit() {
+        //given
         Account currentAccount = new Account(true, 80);
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionToBeApproved = new Transaction("Burger King", 90, dateTime);
+
+        //when
         Account accountStatus = new TransactionAuthorizationService(currentAccount, List.empty(),
                 transactionToBeApproved).evalTransaction();
+
+        //then
         Account accountExpected = currentAccount.accountWithInsufficientLimits();
         assertEquals(accountExpected, accountStatus);
     }
 
     @Test
     public void highFrequencySmallInterval() {
+        //given
         Account currentAccount = new Account(true, 100);
         List<Transaction> approvedTransactions = getApprovedTransactions();
-
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 1, 30, 0);
         Transaction transactionToBeApproved = new Transaction("Grills", 20, dateTime);
 
+        //when
         Account resultAuthorizationStatus = new TransactionAuthorizationService(currentAccount, approvedTransactions, transactionToBeApproved).evalTransaction();
-        Account expectedAuthorization = currentAccount.accountWithHighFrequencySmallInterval();
 
+        //then
+        Account expectedAuthorization = currentAccount.accountWithHighFrequencySmallInterval();
         assertEquals(expectedAuthorization, resultAuthorizationStatus);
     }
 
     @Test
     public void doubledTransaction() {
+        //given
         Account currentAccount = new Account(true, 100);
         List<Transaction> approvedTransactions = getApprovedTransactions();
-
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 1, 59, 0);
         Transaction transactionToBeApproved = new Transaction("Burger King", 20, dateTime);
 
+        //when
         Account resultAuthorizationStatus = new TransactionAuthorizationService(currentAccount, approvedTransactions, transactionToBeApproved).evalTransaction();
-        Account expectedAuthorization = currentAccount.accountWithDoubleTransaction();
 
+        //then
+        Account expectedAuthorization = currentAccount.accountWithDoubleTransaction();
         assertEquals(expectedAuthorization, resultAuthorizationStatus);
     }
 

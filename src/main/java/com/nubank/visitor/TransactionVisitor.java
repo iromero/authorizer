@@ -4,7 +4,7 @@ import com.nubank.Account;
 import com.nubank.Transaction;
 
 public interface TransactionVisitor {
-    Account visit(Account account);
+    void visit(Account account);
 
-    Account visit(Transaction transaction);
+    void visit(Transaction transaction);
 }

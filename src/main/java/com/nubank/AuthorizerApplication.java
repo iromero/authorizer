@@ -1,8 +1,6 @@
 package com.nubank;
 
 import com.nubank.visitor.BankOperationFromJsonBuilderFactory;
-import com.nubank.visitor.TransactionCreator;
-import com.nubank.visitor.TransactionVisitor;
 import org.apache.commons.io.FileUtils;
 
 import java.io.IOException;
@@ -37,9 +35,9 @@ public class AuthorizerApplication implements Runnable {
         while (s.hasNext() && !(next = s.next()).equals("stop")) {
             try {
                 String bankOperationJson = FileUtils.readFileToString(FileUtils.getFile(next), "UTF-8");
-                TransactionVisitor visitor = new TransactionCreator(bank);
                 BankOperation bankOperation = new BankOperationFromJsonBuilderFactory().buildObject(bankOperationJson);
-                bankOperation.accept(visitor);
+                BankOperationService service = new NuBankOperationService();
+                bankOperation.process(bank, service);
             } catch (IOException e) {
                 e.printStackTrace();
             }

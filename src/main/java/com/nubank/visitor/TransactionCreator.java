@@ -5,19 +5,22 @@ import com.nubank.*;
 public class TransactionCreator implements TransactionVisitor {
 
     private final Bank bank;
+    private Account currentState;
 
     public TransactionCreator(Bank bank) {
         this.bank = bank;
     }
 
     @Override
-    public Account visit(Account account) {
-        return new AccountCreationService(bank.getCurrentAccount()).createAccount(account);
+    public void visit(Account account) {
+        currentState = new AccountCreationService(bank.getCurrentAccount()).createAccount(account);
+
     }
 
     @Override
-    public Account visit(Transaction transactionToBeApproved) {
-        return new TransactionAuthorizationService(bank.getCurrentAccount(), bank.getApprovedTransactions(),
+    public void visit(Transaction transactionToBeApproved) {
+        currentState = new TransactionAuthorizationService(bank.getCurrentAccount(), bank.getApprovedTransactions(),
                 transactionToBeApproved).evalTransaction();
+
     }
 }

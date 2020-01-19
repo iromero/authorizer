@@ -6,7 +6,7 @@ import com.nubank.visitor.Visitable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Transaction extends BankOperation implements Visitable<TransactionVisitor> {
+public class Transaction implements BankOperation{
 
     private final String merchant;
     private final int amount;
@@ -41,7 +41,16 @@ public class Transaction extends BankOperation implements Visitable<TransactionV
     }
 
     @Override
-    public void accept(TransactionVisitor visitor) {
-        visitor.visit(this);
+    public Account process(Bank bank, BankOperationService service) {
+        return service.processOperation(bank, this);
     }
+
+//    @Override
+//    public void accept(TransactionVisitor visitor) {
+//        visitor.visit(this);
+//    }
+//
+//    public Account processOperation() {
+//        return null;
+//    }
 }
