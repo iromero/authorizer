@@ -1,11 +1,12 @@
 package com.nubank;
 
-import io.vavr.collection.List;
+import com.nubank.visitor.TransactionVisitor;
+import com.nubank.visitor.Visitable;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Transaction {
+public class Transaction extends BankOperation implements Visitable<TransactionVisitor> {
 
     private final String merchant;
     private final int amount;
@@ -37,5 +38,10 @@ public class Transaction {
     @Override
     public int hashCode() {
         return Objects.hash(merchant, amount);
+    }
+
+    @Override
+    public void accept(TransactionVisitor visitor) {
+        visitor.visit(this);
     }
 }

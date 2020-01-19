@@ -8,9 +8,14 @@ public class AccountCreationServiceTest {
 
     @Test
     public void createSuccessfulAccount() {
+        //given
         Account accountInfo = new Account(true, 100);
         Account currentAccount = null;
+
+        //when
         Account accountResult = new AccountCreationService(currentAccount).createAccount(accountInfo);
+
+        //then
         Account accountExpected = new Account(true, 100);
         assertEquals(accountExpected, accountResult);
     }

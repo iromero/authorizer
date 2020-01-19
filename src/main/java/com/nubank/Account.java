@@ -1,10 +1,11 @@
 package com.nubank;
 
+import com.nubank.visitor.TransactionVisitor;
 import io.vavr.collection.List;
 
 import java.util.Objects;
 
-public final class Account {
+public final class Account extends BankOperation {
 
     private final boolean activeCard;
     private final int availableLimit;
@@ -102,5 +103,10 @@ public final class Account {
                 ", availableLimit=" + availableLimit +
                 ", violations=" + violations +
                 '}';
+    }
+
+    @Override
+    public void accept(TransactionVisitor visitor) {
+        visitor.visit(this);
     }
 }

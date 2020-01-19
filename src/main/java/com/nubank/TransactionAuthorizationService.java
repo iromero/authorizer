@@ -6,34 +6,34 @@ import java.time.Duration;
 
 public class TransactionAuthorizationService {
 
-    private final Account currentAcccount;
+    private final Account currentAccount;
     private final List<Transaction> transactionsApproved;
     private final Transaction transactionToBeApproved;
 
-    public TransactionAuthorizationService(Account currentAcccount, List<Transaction> transactionsApproved,
-                                           Transaction transactionToBeAproved) {
-        this.currentAcccount = currentAcccount;
+    public TransactionAuthorizationService(Account currentAccount, List<Transaction> transactionsApproved,
+                                           Transaction transactionToBeApproved) {
+        this.currentAccount = currentAccount;
         this.transactionsApproved = transactionsApproved;
-        this.transactionToBeApproved = transactionToBeAproved;
+        this.transactionToBeApproved = transactionToBeApproved;
     }
 
     public Account evalTransaction() {
-        if (currentAcccount == null) {
+        if (currentAccount == null) {
             return Account.accountNotInitialized();
         }
-        if (currentAcccount.isNotActive()) {
-            return currentAcccount.accountWithCardNotActive();
+        if (currentAccount.isNotActive()) {
+            return currentAccount.accountWithCardNotActive();
         }
-        if (currentAcccount.isNotThereSufficientLimit(transactionToBeApproved.getAmount())) {
-            return currentAcccount.accountWithInsufficientLimits();
+        if (currentAccount.isNotThereSufficientLimit(transactionToBeApproved.getAmount())) {
+            return currentAccount.accountWithInsufficientLimits();
         }
         if (doesItViolatesDoubleTransaction()) {
-            return currentAcccount.accountWithDoubleTransaction();
+            return currentAccount.accountWithDoubleTransaction();
         }
-        if (doesItViolatesHighFrecuencySmallInterval()) {
-            return currentAcccount.accountWithHighFrequencySmallInterval();
+        if (doesItViolatesHighFrequencySmallInterval()) {
+            return currentAccount.accountWithHighFrequencySmallInterval();
         }
-        return currentAcccount.debt(transactionToBeApproved);
+        return currentAccount.debt(transactionToBeApproved);
     }
 
     public boolean doesItViolatesDoubleTransaction() {
@@ -46,7 +46,7 @@ public class TransactionAuthorizationService {
         return false;
     }
 
-    private boolean doesItViolatesHighFrecuencySmallInterval() {
+    private boolean doesItViolatesHighFrequencySmallInterval() {
         int numberOfTransactionsInLessThanTwoMinutes = 0;
         for (Transaction transactionApproved : transactionsApproved) {
             Duration duration = Duration.between(transactionApproved.getTime(), transactionToBeApproved.getTime()).abs();
