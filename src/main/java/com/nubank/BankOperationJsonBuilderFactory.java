@@ -1,4 +1,4 @@
-package com.nubank.visitor;
+package com.nubank;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -7,17 +7,17 @@ import com.nubank.BankOperation;
 import com.nubank.Transaction;
 import io.vavr.gson.VavrGson;
 
-public class BankOperationFromJsonBuilderFactory {
+public class BankOperationJsonBuilderFactory {
 
     private final Gson gson;
 
-    public BankOperationFromJsonBuilderFactory() {
+    public BankOperationJsonBuilderFactory() {
         GsonBuilder builder = new GsonBuilder();
         VavrGson.registerAll(builder);
         gson = builder.create();
     }
 
-    public BankOperation buildObject(String json) {
+    public BankOperation fromJson(String json) {
         if (json.startsWith("{\"transaction")) {
             return buildTransaction(json);
         }
@@ -30,5 +30,21 @@ public class BankOperationFromJsonBuilderFactory {
 
     Transaction buildTransaction(String json) {
         return gson.fromJson(json, Transaction.class);
+    }
+
+    public String toJson(BankOperation bankOperation) {
+        if (bankOperation instanceof Transaction) {
+            return buildTransactionJson((Transaction) bankOperation);
+        } else {
+            return buildAccountJson((Account) bankOperation);
+        }
+    }
+
+    String buildAccountJson(Account account) {
+        return gson.toJson(account);
+    }
+
+    String buildTransactionJson(Transaction transaction) {
+        return gson.toJson(transaction);
     }
 }
