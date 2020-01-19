@@ -12,19 +12,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TransactionAuthorizationServiceTest {
 
     @Test
-    public void transactionApproved() {
+    public void noViolations() {
         //given
         Account currentAccount = new Account(true, 100);
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionToBeApproved = new Transaction("Burger King", 20, dateTime);
 
         //when
-        Account accountStatus = new TransactionAuthorizationService(currentAccount, List.empty(),
+        Violations violations = new TransactionAuthorizationService(currentAccount, List.empty(),
                 transactionToBeApproved).evalTransaction();
 
         //then
-        Account accountExpected = new Account(true, 80);
-        assertEquals(accountExpected, accountStatus);
+        assertEquals(Violations.noViolations(), violations);
     }
 
     @Test
@@ -34,12 +33,11 @@ public class TransactionAuthorizationServiceTest {
         Transaction transactionToBeApproved = new Transaction("Burger King", 20, dateTime);
 
         //when
-        Account accountStatus = new TransactionAuthorizationService(null, List.empty(),
+        Violations violations = new TransactionAuthorizationService(null, List.empty(),
                 transactionToBeApproved).evalTransaction();
 
         //then
-        Account accountExpected = Account.accountNotInitialized();
-        assertEquals(accountExpected, accountStatus);
+        assertEquals(Violations.accountNotInitialized(), violations);
     }
 
     @Test
@@ -50,12 +48,11 @@ public class TransactionAuthorizationServiceTest {
         Transaction transactionToBeApproved = new Transaction("Burger King", 20, dateTime);
 
         //when
-        Account accountStatus = new TransactionAuthorizationService(currentAccount, List.empty(),
+        Violations violations = new TransactionAuthorizationService(currentAccount, List.empty(),
                 transactionToBeApproved).evalTransaction();
 
         //then
-        Account accountExpected = currentAccount.accountWithCardNotActive();
-        assertEquals(accountExpected, accountStatus);
+        assertEquals(Violations.accountWithCardNotActive(), violations);
     }
 
     @Test
@@ -66,12 +63,11 @@ public class TransactionAuthorizationServiceTest {
         Transaction transactionToBeApproved = new Transaction("Burger King", 90, dateTime);
 
         //when
-        Account accountStatus = new TransactionAuthorizationService(currentAccount, List.empty(),
+        Violations violations = new TransactionAuthorizationService(currentAccount, List.empty(),
                 transactionToBeApproved).evalTransaction();
 
         //then
-        Account accountExpected = currentAccount.accountWithInsufficientLimits();
-        assertEquals(accountExpected, accountStatus);
+        assertEquals(Violations.accountWithInsufficientLimits(), violations);
     }
 
     @Test
@@ -83,11 +79,10 @@ public class TransactionAuthorizationServiceTest {
         Transaction transactionToBeApproved = new Transaction("Grills", 20, dateTime);
 
         //when
-        Account resultAuthorizationStatus = new TransactionAuthorizationService(currentAccount, approvedTransactions, transactionToBeApproved).evalTransaction();
+        Violations violations = new TransactionAuthorizationService(currentAccount, approvedTransactions, transactionToBeApproved).evalTransaction();
 
         //then
-        Account expectedAuthorization = currentAccount.accountWithHighFrequencySmallInterval();
-        assertEquals(expectedAuthorization, resultAuthorizationStatus);
+        assertEquals(Violations.accountWithHighFrequencySmallInterval(), violations);
     }
 
     @Test
@@ -99,11 +94,10 @@ public class TransactionAuthorizationServiceTest {
         Transaction transactionToBeApproved = new Transaction("Burger King", 20, dateTime);
 
         //when
-        Account resultAuthorizationStatus = new TransactionAuthorizationService(currentAccount, approvedTransactions, transactionToBeApproved).evalTransaction();
+        Violations violations = new TransactionAuthorizationService(currentAccount, approvedTransactions, transactionToBeApproved).evalTransaction();
 
         //then
-        Account expectedAuthorization = currentAccount.accountWithDoubleTransaction();
-        assertEquals(expectedAuthorization, resultAuthorizationStatus);
+        assertEquals(Violations.accountWithDoubleTransaction(), violations);
     }
 
     private List<Transaction> getApprovedTransactions() {

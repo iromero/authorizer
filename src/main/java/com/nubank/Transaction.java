@@ -1,12 +1,9 @@
 package com.nubank;
 
-import com.nubank.visitor.TransactionVisitor;
-import com.nubank.visitor.Visitable;
-
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Transaction implements BankOperation{
+public class Transaction extends BankOperation {
 
     private final String merchant;
     private final int amount;
@@ -41,7 +38,7 @@ public class Transaction implements BankOperation{
     }
 
     @Override
-    public Account process(Bank bank, BankOperationService service) {
+    public Violations process(Bank bank, BankOperationService service) {
         return service.processOperation(bank, this);
     }
 

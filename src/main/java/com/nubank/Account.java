@@ -1,11 +1,10 @@
 package com.nubank;
 
-import com.nubank.visitor.TransactionVisitor;
 import io.vavr.collection.List;
 
 import java.util.Objects;
 
-public final class Account implements BankOperation {
+public final class Account extends BankOperation {
 
     private final boolean activeCard;
     private final int availableLimit;
@@ -81,6 +80,10 @@ public final class Account implements BankOperation {
         return availableLimit < amount;
     }
 
+    public boolean hasNotViolations() {
+        return violations.size() == 0;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -106,7 +109,7 @@ public final class Account implements BankOperation {
     }
 
     @Override
-    public Account process(Bank bank, BankOperationService service) {
+    public Violations process(Bank bank, BankOperationService service) {
         return service.processOperation(bank, this);
     }
 

@@ -25,7 +25,7 @@ public class AuthorizerApplication implements Runnable {
     public static void main(String[] args) {
         AuthorizerApplication authorizerApplication = new AuthorizerApplication();
 
-        Bank bank = new Bank();
+        Bank bank = Bank.init();
 
         Thread t = new Thread(authorizerApplication);
         t.start();
@@ -37,7 +37,10 @@ public class AuthorizerApplication implements Runnable {
                 String bankOperationJson = FileUtils.readFileToString(FileUtils.getFile(next), "UTF-8");
                 BankOperation bankOperation = new BankOperationFromJsonBuilderFactory().buildObject(bankOperationJson);
                 BankOperationService service = new NuBankOperationService();
-                bankOperation.process(bank, service);
+                Violations violations = bankOperation.process(bank, service);
+                if (violations.hasNotViolations()) {
+                    bank = bank.update(bankOperation);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

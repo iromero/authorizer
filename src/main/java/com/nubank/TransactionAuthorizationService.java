@@ -17,23 +17,23 @@ public class TransactionAuthorizationService {
         this.transactionToBeApproved = transactionToBeApproved;
     }
 
-    public Account evalTransaction() {
+    public Violations evalTransaction() {
         if (currentAccount == null) {
-            return Account.accountNotInitialized();
+            return Violations.accountNotInitialized();
         }
         if (currentAccount.isNotActive()) {
-            return currentAccount.accountWithCardNotActive();
+            return Violations.accountWithCardNotActive();
         }
         if (currentAccount.isNotThereSufficientLimit(transactionToBeApproved.getAmount())) {
-            return currentAccount.accountWithInsufficientLimits();
+            return Violations.accountWithInsufficientLimits();
         }
         if (doesItViolatesDoubleTransaction()) {
-            return currentAccount.accountWithDoubleTransaction();
+            return Violations.accountWithDoubleTransaction();
         }
         if (doesItViolatesHighFrequencySmallInterval()) {
-            return currentAccount.accountWithHighFrequencySmallInterval();
+            return Violations.accountWithHighFrequencySmallInterval();
         }
-        return currentAccount.debt(transactionToBeApproved);
+        return Violations.noViolations();
     }
 
     public boolean doesItViolatesDoubleTransaction() {

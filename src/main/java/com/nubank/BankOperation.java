@@ -1,5 +1,5 @@
 package com.nubank;
 
-public interface BankOperation {
-    Account process(Bank bank, BankOperationService service);
+public abstract class BankOperation {
+    abstract Violations process(Bank bank, BankOperationService service);
 }
