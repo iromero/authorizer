@@ -14,6 +14,7 @@ public class BankOperationJsonBuilderFactory {
         GsonBuilder builder = new GsonBuilder();
         VavrGson.registerAll(builder);
         builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
+        builder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
         gson = builder.create();
     }
 

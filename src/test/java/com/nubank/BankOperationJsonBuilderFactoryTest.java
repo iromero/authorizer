@@ -4,8 +4,6 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 import java.time.Month;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -29,20 +27,9 @@ public class BankOperationJsonBuilderFactoryTest {
     }
 
     @Test
-    public void testDateTimeDeserializer(){
-        String json = "{\"time\":\"2019-02-13T10:00:00.000Z\"}";
-        LocalDateTime dateTime =  LocalDateTime.parse(json,
-                DateTimeFormatter.ofPattern("uuuu-MM-dd HH:mm:ss.nnnZ").withLocale(Locale.ENGLISH));
-        assertEquals(2009, dateTime.getYear());
-        assertEquals(02, dateTime.getMonthValue());
-    }
-
-    @Test
     public void transactionDeserializer() {
         //given
-        String json = "{\"transaction\":{\"merchant\":\"Burger King\",\"amount\": 20,\"time\":\"2019-02-13 10:00:00.000\"}}";
-//        String json = "{\"merchant\":\"Burger King\",\"amount\":\"20\",\"time\":\"2019-02-13T10:00:00.000Z\"}";
-//        String json = "{\"merchant\":\"Burger King\",\"amount\":20,\"time\":{\"date\":{\"year\":2019,\"month\":2,\"day\":13},\"time\":{\"hour\":10,\"minute\":0,\"second\":0,\"nano\":0}}}";
+        String json = "{\"transaction\":{\"merchant\":\"Burger King\",\"amount\": 20,\"time\":\"2019-02-13T10:00:00.000Z\"}}";
 
         //when
         BankOperation bankOperation = new BankOperationJsonBuilderFactory().fromJson(json);
@@ -71,17 +58,18 @@ public class BankOperationJsonBuilderFactoryTest {
         assertEquals(accountJsonExpected, accountJson);
     }
 
-//    @Test
-//    public void transactionSerializer() {
-//        //given
-//        Transaction transaction = new Transaction("Burger King", 20, LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0));
-//
-//        //when
-//        String transactionJson = new BankOperationJsonBuilderFactory().toJson(transaction);
-//
-//        //then
-//        String transactionJsonExpected = "{\"transaction\":{\"merchant\": \"Burger King\" ,\"amount\":\"20\",\"time\":\"2019-02-13T10:00:00.000Z\"}}";
-//        assertEquals(transactionJsonExpected, transactionJson);
-//    }
+    @Test
+    public void transactionSerializer() {
+        //given
+        Transaction transaction = new Transaction("Burger King", 20, LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0));
+        TransactionOperation transactionOperation = new TransactionOperation(transaction);
+
+        //when
+        String transactionJson = new BankOperationJsonBuilderFactory().toJson(transactionOperation);
+
+        //then
+        String transactionJsonExpected = "{\"transaction\":{\"merchant\":\"Burger King\",\"amount\":20,\"time\":\"2019-02-13T10:00:00.000Z\"}}";
+        assertEquals(transactionJsonExpected, transactionJson);
+    }
 
 }
