@@ -45,4 +45,13 @@ public class Transaction extends OperationInfo {
     public int hashCode() {
         return Objects.hash(merchant, amount, time);
     }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "merchant='" + merchant + '\'' +
+                ", amount=" + amount +
+                ", time=" + time +
+                '}';
+    }
 }
