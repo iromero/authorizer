@@ -1,18 +1,21 @@
 package com.nubank.service;
 
 import com.nubank.model.Account;
+import com.nubank.model.Bank;
 import com.nubank.model.Violations;
 
-public class AccountCreationService {
+public class AccountCreationService implements OperationService {
 
-    private Account currentAccount;
+    private Bank bank;
 
-    public AccountCreationService(Account currentAccount) {
-        this.currentAccount = currentAccount;
+    public AccountCreationService(Bank bank) {
+        this.bank = bank;
     }
 
-    public Violations createAccount(Account accountInfo) {
-        if (currentAccount == null) {
+
+    @Override
+    public Violations evalOperation() {
+        if (bank.noExistAccount()) {
             return Violations.noViolations();
         } else {
             return Violations.accountAlreadyInitialized();

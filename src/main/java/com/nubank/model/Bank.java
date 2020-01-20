@@ -6,13 +6,21 @@ public class Bank {
     private final Account currentAccount;
     private final List<Transaction> approvedTransactions;
 
-    private Bank(Account currentAccount, List<Transaction> approvedTransactions) {
+    public Bank(Account currentAccount, List<Transaction> approvedTransactions) {
         this.currentAccount = currentAccount;
         this.approvedTransactions = approvedTransactions;
     }
 
     public static Bank init() {
         return new Bank(null, List.empty());
+    }
+
+    public boolean existAccount() {
+        return (currentAccount != null);
+    }
+
+    public boolean noExistAccount() {
+        return (currentAccount == null);
     }
 
     public Account getCurrentAccount() {

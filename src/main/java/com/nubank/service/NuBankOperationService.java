@@ -10,12 +10,12 @@ import com.nubank.model.Violations;
 public class NuBankOperationService implements BankOperationService {
     @Override
     public Violations processOperation(Bank bank, AccountOperation accountOperation) {
-        return new AccountCreationService(bank.getCurrentAccount()).createAccount((Account) accountOperation.getOperationInfo());
+        return new AccountCreationService(bank).evalOperation();
     }
 
     @Override
     public Violations processOperation(Bank bank, TransactionOperation transactionOperation) {
-        return new TransactionAuthorizationService(bank.getCurrentAccount(), bank.getApprovedTransactions(),
-                (Transaction) transactionOperation.getOperationInfo()).evalTransaction();
+        return new TransactionAuthorizationService(bank,
+                (Transaction) transactionOperation.getOperationInfo()).evalOperation();
     }
 }

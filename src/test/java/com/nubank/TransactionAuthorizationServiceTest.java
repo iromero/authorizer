@@ -1,6 +1,7 @@
 package com.nubank;
 
 import com.nubank.model.Account;
+import com.nubank.model.Bank;
 import com.nubank.model.Transaction;
 import com.nubank.model.Violations;
 import com.nubank.service.TransactionAuthorizationService;
@@ -21,10 +22,10 @@ public class TransactionAuthorizationServiceTest {
         Account currentAccount = new Account(true, 100);
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionToBeApproved = new Transaction("Burger King", 20, dateTime);
+        Bank bank = new Bank(currentAccount, List.empty());
 
         //when
-        Violations violations = new TransactionAuthorizationService(currentAccount, List.empty(),
-                transactionToBeApproved).evalTransaction();
+        Violations violations = new TransactionAuthorizationService(bank, transactionToBeApproved).evalOperation();
 
         //then
         assertEquals(Violations.noViolations(), violations);
@@ -35,10 +36,10 @@ public class TransactionAuthorizationServiceTest {
         //given
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionToBeApproved = new Transaction("Burger King", 20, dateTime);
+        Bank bank = Bank.init();//The account is not initialized.
 
         //when
-        Violations violations = new TransactionAuthorizationService(null, List.empty(),
-                transactionToBeApproved).evalTransaction();
+        Violations violations = new TransactionAuthorizationService(bank, transactionToBeApproved).evalOperation();
 
         //then
         assertEquals(Violations.accountNotInitialized(), violations);
@@ -50,10 +51,10 @@ public class TransactionAuthorizationServiceTest {
         Account currentAccount = new Account(false, 100);
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionToBeApproved = new Transaction("Burger King", 20, dateTime);
+        Bank bank = new Bank(currentAccount, List.empty());
 
         //when
-        Violations violations = new TransactionAuthorizationService(currentAccount, List.empty(),
-                transactionToBeApproved).evalTransaction();
+        Violations violations = new TransactionAuthorizationService(bank, transactionToBeApproved).evalOperation();
 
         //then
         assertEquals(Violations.accountWithCardNotActive(), violations);
@@ -65,10 +66,10 @@ public class TransactionAuthorizationServiceTest {
         Account currentAccount = new Account(true, 80);
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionToBeApproved = new Transaction("Burger King", 90, dateTime);
+        Bank bank = new Bank(currentAccount, List.empty());
 
         //when
-        Violations violations = new TransactionAuthorizationService(currentAccount, List.empty(),
-                transactionToBeApproved).evalTransaction();
+        Violations violations = new TransactionAuthorizationService(bank, transactionToBeApproved).evalOperation();
 
         //then
         assertEquals(Violations.accountWithInsufficientLimits(), violations);
@@ -81,9 +82,10 @@ public class TransactionAuthorizationServiceTest {
         List<Transaction> approvedTransactions = getApprovedTransactions();
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 1, 30, 0);
         Transaction transactionToBeApproved = new Transaction("Grills", 20, dateTime);
+        Bank bank = new Bank(currentAccount, approvedTransactions);
 
         //when
-        Violations violations = new TransactionAuthorizationService(currentAccount, approvedTransactions, transactionToBeApproved).evalTransaction();
+        Violations violations = new TransactionAuthorizationService(bank, transactionToBeApproved).evalOperation();
 
         //then
         assertEquals(Violations.accountWithHighFrequencySmallInterval(), violations);
@@ -96,9 +98,10 @@ public class TransactionAuthorizationServiceTest {
         List<Transaction> approvedTransactions = getApprovedTransactions();
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 2, 55, 0);
         Transaction transactionToBeApproved = new Transaction("Mac Donall's", 20, dateTime);
+        Bank bank = new Bank(currentAccount, approvedTransactions);
 
         //when
-        Violations violations = new TransactionAuthorizationService(currentAccount, approvedTransactions, transactionToBeApproved).evalTransaction();
+        Violations violations = new TransactionAuthorizationService(bank, transactionToBeApproved).evalOperation();
 
         //then
         assertEquals(Violations.accountWithDoubleTransaction(), violations);
