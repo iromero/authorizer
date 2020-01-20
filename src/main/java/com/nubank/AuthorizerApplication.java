@@ -4,7 +4,7 @@ import com.nubank.model.Bank;
 import com.nubank.service.FileOperatorReader;
 import com.nubank.service.ProcessInputOperation;
 import com.nubank.service.ProcessInputOperationResult;
-import org.apache.commons.io.FileUtils;
+import io.vavr.collection.List;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -34,14 +34,16 @@ public class AuthorizerApplication implements Runnable {
         String next = null;
         while (s.hasNext() && !(next = s.next()).equals("stop")) {
             try {
-                String bankOperationJson = new FileOperatorReader(next).read();
-                ProcessInputOperation processInputOperation = new ProcessInputOperation(bank, bankOperationJson);
-                ProcessInputOperationResult result = processInputOperation.process();
-                if (result.hasNotViolations()) {
-                    bank = bank.update(result.getOperationInfo());
+                List<String> bankOperationsJson = new FileOperatorReader(next).read();
+                for (String bankOperationJson : bankOperationsJson) {
+                    ProcessInputOperation processInputOperation = new ProcessInputOperation(bank, bankOperationJson);
+                    ProcessInputOperationResult result = processInputOperation.process();
+                    if (result.hasNotViolations()) {
+                        bank = bank.update(result.getOperationInfo());
+                    }
+                    ProcessOutputOperation processOutputOperation = new ProcessOutputOperation(bank.getCurrentAccount(), result.getViolations());
+                    System.out.println(processOutputOperation.process());
                 }
-                ProcessOutputOperation processOutputOperation = new ProcessOutputOperation(bank.getCurrentAccount(), result.getViolations());
-                System.out.println(processOutputOperation.process());
             } catch (IOException e) {
                 e.printStackTrace();
             }

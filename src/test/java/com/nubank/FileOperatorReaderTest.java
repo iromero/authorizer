@@ -1,6 +1,7 @@
 package com.nubank;
 
 import com.nubank.service.FileOperatorReader;
+import io.vavr.collection.List;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -16,11 +17,11 @@ public class FileOperatorReaderTest {
 
         //when
         FileOperatorReader reader = new FileOperatorReader(path);
-        String jsonResult = reader.read();
+        List<String> jsonResultList = (List<String>) reader.read();
 
         //then
-        String jsonExpected = "{\"account\": {\"active-card\": true, \"available-limit\": 100}}";
-        assertEquals(jsonExpected, jsonResult);
+        List<String> jsonsExpectedList = List.of("{\"account\": {\"active-card\": true, \"available-limit\": 100}}");
+        assertEquals(jsonsExpectedList, jsonResultList);
     }
 
 }
