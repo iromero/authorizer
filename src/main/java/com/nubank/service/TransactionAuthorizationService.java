@@ -21,25 +21,24 @@ public class TransactionAuthorizationService implements OperationService {
 
     @Override
     public Violations evalOperation() {
+        Violations violations = new Violations();
         if (!bank.existAccount()) {
-            return Violations.accountNotInitialized();
+            return violations.appendAccountNotInitialized();
         }
-
         Account currentAccount = bank.getCurrentAccount();
-
         if (currentAccount.isNotActive()) {
-            return Violations.accountWithCardNotActive();
+            return violations.appendAccountWithCardNotActive();
         }
         if (currentAccount.isNotThereSufficientLimit(transactionToBeApproved.getAmount())) {
-            return Violations.accountWithInsufficientLimits();
+            violations = violations.appendAccountWithInsufficientLimits();
         }
         if (doesItViolatesDoubleTransaction()) {
-            return Violations.accountWithDoubleTransaction();
+            violations = violations.appendAccountWithDoubleTransaction();
         }
         if (doesItViolatesHighFrequencySmallInterval()) {
-            return Violations.accountWithHighFrequencySmallInterval();
+            violations = violations.appendAccountWithHighFrequencySmallInterval();
         }
-        return Violations.noViolations();
+        return violations;
     }
 
     public boolean doesItViolatesDoubleTransaction() {

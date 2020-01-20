@@ -6,7 +6,7 @@ import com.nubank.model.Transaction;
 import com.nubank.model.Violations;
 import com.nubank.service.BankOperationService;
 
-public class TransactionOperation extends BankOperation {
+public class TransactionOperation implements BankOperation {
 
     private final Transaction transaction;
 

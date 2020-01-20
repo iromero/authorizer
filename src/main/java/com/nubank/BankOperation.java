@@ -5,7 +5,7 @@ import com.nubank.model.OperationInfo;
 import com.nubank.model.Violations;
 import com.nubank.service.BankOperationService;
 
-public abstract class BankOperation {
-    public abstract Violations process(Bank bank, BankOperationService service);
-    public abstract OperationInfo getOperationInfo();
+public interface BankOperation {
+    Violations process(Bank bank, BankOperationService service);
+    OperationInfo getOperationInfo();
 }

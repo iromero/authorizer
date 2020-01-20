@@ -7,7 +7,7 @@ import com.nubank.model.Violations;
 import com.nubank.service.BankOperationService;
 import io.vavr.collection.List;
 
-public class AccountOperation extends BankOperation {
+public class AccountOperation implements BankOperation {
     private final Account account;
     private final List<String> violations;
 
