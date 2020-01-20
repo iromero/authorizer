@@ -17,12 +17,12 @@ public class AccountOperation extends BankOperation {
     }
 
     @Override
-    Violations process(Bank bank, BankOperationService service) {
+    public Violations process(Bank bank, BankOperationService service) {
         return service.processOperation(bank, this);
     }
 
     @Override
-    OperationInfo getOperationInfo() {
+    public OperationInfo getOperationInfo() {
         return account;
     }
 }
