@@ -13,7 +13,12 @@ public class AccountOperation extends BankOperation {
 
     public AccountOperation(Account account) {
         this.account = account;
-        violations = List.empty();
+        this.violations = Violations.noViolations().getViolations();
+    }
+
+    public AccountOperation(Account currentAccount, Violations violations) {
+        this.account = currentAccount;
+        this.violations = violations.getViolations();
     }
 
     @Override

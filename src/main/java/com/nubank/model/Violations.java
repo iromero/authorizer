@@ -11,6 +11,10 @@ public class Violations {
         this.violations = violations;
     }
 
+    public List<String> getViolations() {
+        return violations;
+    }
+
     public static Violations noViolations() {
         return new Violations(List.empty());
     }

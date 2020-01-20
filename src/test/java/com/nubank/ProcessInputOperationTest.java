@@ -5,6 +5,7 @@ import com.nubank.model.Bank;
 import com.nubank.model.Transaction;
 import com.nubank.model.Violations;
 import com.nubank.service.ProcessInputOperation;
+import com.nubank.service.ProcessInputOperationResult;
 import io.vavr.collection.List;
 import org.junit.jupiter.api.Test;
 
@@ -23,10 +24,10 @@ public class ProcessInputOperationTest {
 
         //when
         ProcessInputOperation processInputOperation = new ProcessInputOperation(bank, accountOperationJson);
-        Violations violations = processInputOperation.process();
+        ProcessInputOperationResult result = processInputOperation.process();
 
         //then
-        assertEquals(Violations.noViolations(), violations);
+        assertEquals(Violations.noViolations(), result.getViolations());
     }
 
     @Test
@@ -37,10 +38,10 @@ public class ProcessInputOperationTest {
 
         //when
         ProcessInputOperation processInputOperation = new ProcessInputOperation(bank, accountOperationJson);
-        Violations violations = processInputOperation.process();
+        ProcessInputOperationResult result = processInputOperation.process();
 
         //then
-        assertEquals(Violations.accountAlreadyInitialized(), violations);
+        assertEquals(Violations.accountAlreadyInitialized(), result.getViolations());
     }
 
     @Test
@@ -52,10 +53,10 @@ public class ProcessInputOperationTest {
 
         //when
         ProcessInputOperation processInputOperation = new ProcessInputOperation(bank, transactionOperationJson);
-        Violations violations = processInputOperation.process();
+        ProcessInputOperationResult result = processInputOperation.process();
 
         //then
-        assertEquals(Violations.noViolations(), violations);
+        assertEquals(Violations.noViolations(), result.getViolations());
     }
 
     @Test
@@ -66,10 +67,10 @@ public class ProcessInputOperationTest {
 
         //when
         ProcessInputOperation processInputOperation = new ProcessInputOperation(bank, transactionOperationJson);
-        Violations violations = processInputOperation.process();
+        ProcessInputOperationResult result = processInputOperation.process();
 
         //then
-        assertEquals(Violations.accountNotInitialized(), violations);
+        assertEquals(Violations.accountNotInitialized(), result.getViolations());
     }
 
     @Test
@@ -81,10 +82,10 @@ public class ProcessInputOperationTest {
 
         //when
         ProcessInputOperation processInputOperation = new ProcessInputOperation(bank, transactionOperationJson);
-        Violations violations = processInputOperation.process();
+        ProcessInputOperationResult result = processInputOperation.process();
 
         //then
-        assertEquals(Violations.accountWithCardNotActive(), violations);
+        assertEquals(Violations.accountWithCardNotActive(), result.getViolations());
     }
 
     @Test
@@ -96,10 +97,10 @@ public class ProcessInputOperationTest {
 
         //when
         ProcessInputOperation processInputOperation = new ProcessInputOperation(bank, transactionOperationJson);
-        Violations violations = processInputOperation.process();
+        ProcessInputOperationResult result = processInputOperation.process();
 
         //then
-        assertEquals(Violations.accountWithInsufficientLimits(), violations);
+        assertEquals(Violations.accountWithInsufficientLimits(), result.getViolations());
     }
 
     @Test
@@ -112,10 +113,10 @@ public class ProcessInputOperationTest {
 
         //when
         ProcessInputOperation processInputOperation = new ProcessInputOperation(bank, transactionOperationJson);
-        Violations violations = processInputOperation.process();
+        ProcessInputOperationResult result = processInputOperation.process();
 
         //then
-        assertEquals(Violations.accountWithHighFrequencySmallInterval(), violations);
+        assertEquals(Violations.accountWithHighFrequencySmallInterval(), result.getViolations());
     }
 
     @Test
@@ -128,10 +129,10 @@ public class ProcessInputOperationTest {
 
         //when
         ProcessInputOperation processInputOperation = new ProcessInputOperation(bank, transactionOperationJson);
-        Violations violations = processInputOperation.process();
+        ProcessInputOperationResult result = processInputOperation.process();
 
         //then
-        assertEquals(Violations.accountWithDoubleTransaction(), violations);
+        assertEquals(Violations.accountWithDoubleTransaction(), result.getViolations());
     }
 
     private List<Transaction> getApprovedTransactions() {

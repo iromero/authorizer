@@ -7,5 +7,5 @@ import com.nubank.service.BankOperationService;
 
 public abstract class BankOperation {
     public abstract Violations process(Bank bank, BankOperationService service);
-    abstract OperationInfo getOperationInfo();
+    public abstract OperationInfo getOperationInfo();
 }

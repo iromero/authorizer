@@ -1,10 +1,8 @@
 package com.nubank;
 
-import com.nubank.json.BankOperationJsonBuilderFactory;
 import com.nubank.model.Bank;
-import com.nubank.model.Violations;
-import com.nubank.service.BankOperationService;
-import com.nubank.service.NuBankOperationService;
+import com.nubank.service.ProcessInputOperation;
+import com.nubank.service.ProcessInputOperationResult;
 import org.apache.commons.io.FileUtils;
 
 import java.io.IOException;
@@ -39,16 +37,13 @@ public class AuthorizerApplication implements Runnable {
         while (s.hasNext() && !(next = s.next()).equals("stop")) {
             try {
                 String bankOperationJson = FileUtils.readFileToString(FileUtils.getFile(next), "UTF-8");
-                BankOperation bankOperation = new BankOperationJsonBuilderFactory().fromJson(bankOperationJson);
-                BankOperationService service = new NuBankOperationService();
-                Violations violations = bankOperation.process(bank, service);
-                if (violations.hasNotViolations()) {
-                    bank = bank.update(bankOperation.getOperationInfo());
-                } else {
-//                    Account accountWithViolations;
-//                    String json;
-//                    System.out.println(json);
+                ProcessInputOperation processInputOperation = new ProcessInputOperation(bank, bankOperationJson);
+                ProcessInputOperationResult result = processInputOperation.process();
+                if (result.hasNotViolations()) {
+                    bank = bank.update(result.getOperationInfo());
                 }
+                ProcessOutputOperation processOutputOperation = new ProcessOutputOperation(bank.getCurrentAccount(), result.getViolations());
+                System.out.println(processOutputOperation.process());
             } catch (IOException e) {
                 e.printStackTrace();
             }

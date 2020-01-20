@@ -15,10 +15,10 @@ public class ProcessInputOperation {
         this.bankOperationJson = bankOperationJson;
     }
 
-    public Violations process() {
+    public ProcessInputOperationResult process() {
         BankOperation bankOperation = new BankOperationJsonBuilderFactory().fromJson(bankOperationJson);
         BankOperationService service = new NuBankOperationService();
         Violations violations = bankOperation.process(bank, service);
-        return violations;
+        return new ProcessInputOperationResult(violations, bankOperation.getOperationInfo());
     }
 }
