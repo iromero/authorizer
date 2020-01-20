@@ -1,5 +1,8 @@
 package com.nubank;
 
+import com.nubank.json.BankOperationJsonBuilderFactory;
+import com.nubank.model.Account;
+import com.nubank.model.Transaction;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;

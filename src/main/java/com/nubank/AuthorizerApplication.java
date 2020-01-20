@@ -1,5 +1,10 @@
 package com.nubank;
 
+import com.nubank.json.BankOperationJsonBuilderFactory;
+import com.nubank.model.Bank;
+import com.nubank.model.Violations;
+import com.nubank.service.BankOperationService;
+import com.nubank.service.NuBankOperationService;
 import org.apache.commons.io.FileUtils;
 
 import java.io.IOException;

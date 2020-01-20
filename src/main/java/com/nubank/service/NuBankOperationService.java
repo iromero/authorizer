@@ -1,4 +1,9 @@
-package com.nubank;
+package com.nubank.service;
+
+import com.nubank.AccountOperation;
+import com.nubank.model.Bank;
+import com.nubank.TransactionOperation;
+import com.nubank.model.Violations;
 
 public class NuBankOperationService implements BankOperationService {
     @Override

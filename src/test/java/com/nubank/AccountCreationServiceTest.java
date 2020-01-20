@@ -1,5 +1,8 @@
 package com.nubank;
 
+import com.nubank.model.Account;
+import com.nubank.model.Violations;
+import com.nubank.service.AccountCreationService;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

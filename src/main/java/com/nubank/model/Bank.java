@@ -1,4 +1,4 @@
-package com.nubank;
+package com.nubank.model;
 
 import io.vavr.collection.List;
 

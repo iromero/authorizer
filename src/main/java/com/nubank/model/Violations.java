@@ -1,4 +1,4 @@
-package com.nubank;
+package com.nubank.model;
 
 import io.vavr.collection.List;
 
@@ -54,5 +54,12 @@ public class Violations {
     @Override
     public int hashCode() {
         return Objects.hash(violations);
+    }
+
+    @Override
+    public String toString() {
+        return "Violations{" +
+                "violations=" + violations +
+                '}';
     }
 }

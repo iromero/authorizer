@@ -1,5 +1,11 @@
 package com.nubank;
 
+import com.nubank.model.Bank;
+import com.nubank.model.OperationInfo;
+import com.nubank.model.Transaction;
+import com.nubank.model.Violations;
+import com.nubank.service.BankOperationService;
+
 public class TransactionOperation extends BankOperation {
 
     private final Transaction transaction;

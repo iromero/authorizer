@@ -1,4 +1,4 @@
-package com.nubank;
+package com.nubank.model;
 
 import com.google.gson.annotations.SerializedName;
 

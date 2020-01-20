@@ -1,4 +1,7 @@
-package com.nubank;
+package com.nubank.service;
+
+import com.nubank.model.Account;
+import com.nubank.model.Violations;
 
 public class AccountCreationService {
 

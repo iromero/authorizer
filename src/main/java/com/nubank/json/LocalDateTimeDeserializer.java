@@ -1,4 +1,4 @@
-package com.nubank;
+package com.nubank.json;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;

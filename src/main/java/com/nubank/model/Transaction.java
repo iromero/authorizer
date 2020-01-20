@@ -1,4 +1,4 @@
-package com.nubank;
+package com.nubank.model;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -25,6 +25,10 @@ public class Transaction extends OperationInfo {
 
     public LocalDateTime getTime() {
         return time;
+    }
+
+    public boolean sameAmountAndMerchant(Transaction transaction) {
+        return (amount == transaction.getAmount() && merchant.equals(transaction.getMerchant()));
     }
 
     @Override

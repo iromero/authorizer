@@ -1,7 +1,10 @@
-package com.nubank;
+package com.nubank.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.nubank.AccountOperation;
+import com.nubank.BankOperation;
+import com.nubank.TransactionOperation;
 import io.vavr.gson.VavrGson;
 
 import java.time.LocalDateTime;

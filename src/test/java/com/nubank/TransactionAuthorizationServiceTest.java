@@ -1,5 +1,9 @@
 package com.nubank;
 
+import com.nubank.model.Account;
+import com.nubank.model.Transaction;
+import com.nubank.model.Violations;
+import com.nubank.service.TransactionAuthorizationService;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -90,8 +94,8 @@ public class TransactionAuthorizationServiceTest {
         //given
         Account currentAccount = new Account(true, 100);
         List<Transaction> approvedTransactions = getApprovedTransactions();
-        LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 1, 59, 0);
-        Transaction transactionToBeApproved = new Transaction("Burger King", 20, dateTime);
+        LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 2, 55, 0);
+        Transaction transactionToBeApproved = new Transaction("Mac Donall's", 20, dateTime);
 
         //when
         Violations violations = new TransactionAuthorizationService(currentAccount, approvedTransactions, transactionToBeApproved).evalTransaction();
