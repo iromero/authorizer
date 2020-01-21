@@ -82,6 +82,10 @@ public class Violations {
         return violations.size() == 0;
     }
 
+    public Violations append(Violations violations) {
+        return new Violations(this.violations.appendAll(violations.getViolations()));
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -25,6 +25,12 @@ public class AuthorizerApplication implements Runnable {
     public static void main(String[] args) {
         AuthorizerApplication authorizerApplication = new AuthorizerApplication();
 
+//        BufferedReader br = new BufferedReader(
+//                new InputStreamReader(System.in));
+//        String line;
+//
+//        line = br.readLine();
+
         Bank bank = Bank.init();
 
         Thread t = new Thread(authorizerApplication);

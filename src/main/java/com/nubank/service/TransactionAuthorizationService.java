@@ -1,22 +1,34 @@
 package com.nubank.service;
 
+import com.nubank.businessrule.BusinessRule;
+import com.nubank.businessrule.DoubleTransactionRule;
+import com.nubank.businessrule.HighFrequencySmallIntervalTransactionRule;
+import com.nubank.businessrule.InsuficientLimitsTransactionRule;
 import com.nubank.model.Account;
 import com.nubank.model.Bank;
 import com.nubank.model.Transaction;
 import com.nubank.model.Violations;
-
-import java.time.Duration;
+import io.vavr.collection.List;
 
 public class TransactionAuthorizationService implements OperationService {
 
-    private static final int TWO_MINUTES = 120;
-    private static final int HIGH_FREQUENCY_SMALL_INTERVAL = 3;
     private final Bank bank;
     private final Transaction transactionToBeApproved;
+    private final List<BusinessRule> businessRules;
 
     public TransactionAuthorizationService(Bank bank, Transaction transactionToBeApproved) {
         this.bank = bank;
         this.transactionToBeApproved = transactionToBeApproved;
+        businessRules = buildBusinessRule();
+    }
+
+    public List<BusinessRule> buildBusinessRule() {
+        List<BusinessRule> businessRuleList = List.of(
+                new InsuficientLimitsTransactionRule(),
+                new DoubleTransactionRule(),
+                new HighFrequencySmallIntervalTransactionRule()
+        );
+        return businessRuleList;
     }
 
     @Override
@@ -29,37 +41,11 @@ public class TransactionAuthorizationService implements OperationService {
         if (currentAccount.isNotActive()) {
             return violations.appendAccountWithCardNotActive();
         }
-        if (currentAccount.isNotThereSufficientLimit(transactionToBeApproved.getAmount())) {
-            violations = violations.appendAccountWithInsufficientLimits();
-        }
-        if (doesItViolatesDoubleTransaction()) {
-            violations = violations.appendAccountWithDoubleTransaction();
-        }
-        if (doesItViolatesHighFrequencySmallInterval()) {
-            violations = violations.appendAccountWithHighFrequencySmallInterval();
+        for (BusinessRule businessRule : businessRules) {
+            violations = violations.append(businessRule.evalOperation(bank, transactionToBeApproved));
         }
         return violations;
     }
 
-    public boolean doesItViolatesDoubleTransaction() {
-        for (Transaction transactionApproved : bank.getApprovedTransactions()) {
-            Duration duration = Duration.between(transactionApproved.getTime(), transactionToBeApproved.getTime()).abs();
-            if (transactionApproved.sameAmountAndMerchant(transactionToBeApproved) && duration.getSeconds() <= TWO_MINUTES) {
-                return true;
-            }
-        }
-        return false;
-    }
 
-    private boolean doesItViolatesHighFrequencySmallInterval() {
-        int numberOfTransactionsInLessThanTwoMinutes = 0;
-        for (Transaction transactionApproved : bank.getApprovedTransactions()) {
-            Duration duration = Duration.between(transactionApproved.getTime(), transactionToBeApproved.getTime()).abs();
-            if (duration.getSeconds() <= TWO_MINUTES) {
-                numberOfTransactionsInLessThanTwoMinutes++;
-            }
-        }
-        // Number of already transactions approved in less than two minutes taking as reference the incoming transaction.
-        return (numberOfTransactionsInLessThanTwoMinutes >= HIGH_FREQUENCY_SMALL_INTERVAL);
-    }
 }
