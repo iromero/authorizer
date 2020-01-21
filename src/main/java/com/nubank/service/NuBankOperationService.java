@@ -2,7 +2,6 @@ package com.nubank.service;
 
 import com.nubank.AccountOperation;
 import com.nubank.TransactionOperation;
-import com.nubank.model.Account;
 import com.nubank.model.Bank;
 import com.nubank.model.Transaction;
 import com.nubank.model.Violations;

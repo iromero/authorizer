@@ -1,6 +1,5 @@
 package com.nubank.service;
 
-import com.nubank.model.Account;
 import com.nubank.model.Bank;
 import com.nubank.model.Violations;
 
@@ -11,7 +10,6 @@ public class AccountCreationService implements OperationService {
     public AccountCreationService(Bank bank) {
         this.bank = bank;
     }
-
 
     @Override
     public Violations evalOperation() {

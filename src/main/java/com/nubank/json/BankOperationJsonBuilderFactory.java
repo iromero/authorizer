@@ -37,18 +37,6 @@ public class BankOperationJsonBuilderFactory {
     }
 
     public String toJson(BankOperation bankOperation) {
-        if (bankOperation instanceof TransactionOperation) {
-            return buildTransactionJson((TransactionOperation) bankOperation);
-        } else {
-            return buildAccountJson((AccountOperation) bankOperation);
-        }
-    }
-
-    String buildAccountJson(AccountOperation account) {
-        return gson.toJson(account);
-    }
-
-    String buildTransactionJson(TransactionOperation transaction) {
-        return gson.toJson(transaction);
+        return bankOperation.toJson(gson);
     }
 }
