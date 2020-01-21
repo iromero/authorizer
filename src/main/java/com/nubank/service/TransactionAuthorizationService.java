@@ -10,21 +10,21 @@ public class TransactionAuthorizationService implements OperationService {
 
     private final Bank bank;
     private final Transaction transactionToBeApproved;
-    private final List<BusinessRule> businessRules;
+    private final List<TransactionBusinessRule> businessRules;
 
     public TransactionAuthorizationService(Bank bank, Transaction transactionToBeApproved) {
         this.bank = bank;
         this.transactionToBeApproved = transactionToBeApproved;
-        this.businessRules = buildBusinessRule();
+        this.businessRules = buildBusinessRules();
     }
 
-    public List<BusinessRule> buildBusinessRule() {
-        List<BusinessRule> businessRuleList = List.of(
-                new AccountNotInitializedRule(),
-                new AccountNoActiveRule(),
-                new InsufficientLimitsTransactionRule(),
-                new DoubleTransactionRule(),
-                new HighFrequencySmallIntervalTransactionRule()
+    public List<TransactionBusinessRule> buildBusinessRules() {
+        List<TransactionBusinessRule> businessRuleList = List.of(
+                new AccountNotInitializedRuleTransaction(),
+                new AccountNoActiveRuleTransaction(),
+                new InsufficientLimitsTransactionRuleTransaction(),
+                new DoubleTransactionRuleTransaction(),
+                new HighFrequencySmallIntervalTransactionRuleTransaction()
         );
         return businessRuleList;
     }
@@ -32,7 +32,7 @@ public class TransactionAuthorizationService implements OperationService {
     @Override
     public Violations evalOperation() {
         Violations violations = new Violations();
-        for (BusinessRule businessRule : businessRules) {
+        for (TransactionBusinessRule businessRule : businessRules) {
             violations = violations.append(businessRule.evalOperation(bank, transactionToBeApproved));
         }
         return violations;

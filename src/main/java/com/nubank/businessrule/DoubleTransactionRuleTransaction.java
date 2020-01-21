@@ -6,7 +6,7 @@ import com.nubank.model.Violations;
 
 import java.time.Duration;
 
-public class DoubleTransactionRule implements BusinessRule {
+public class DoubleTransactionRuleTransaction implements TransactionBusinessRule {
     private static final int MAX_TRANSACTION_INTERVAL_TIME = 120;
 
     @Override
