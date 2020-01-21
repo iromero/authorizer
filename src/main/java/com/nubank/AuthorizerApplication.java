@@ -1,61 +1,37 @@
 package com.nubank;
 
 import com.nubank.model.Bank;
-import com.nubank.service.FileOperatorReader;
 import com.nubank.service.ProcessInputOperation;
 import com.nubank.service.ProcessInputOperationResult;
-import io.vavr.collection.List;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Scanner;
+import java.io.InputStreamReader;
 
-public class AuthorizerApplication implements Runnable {
-
-    volatile boolean keepRunning = true;
-
-    public void run() {
-        while (keepRunning) {
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-            }
-        }
-    }
-
-    public static void main(String[] args) {
-        AuthorizerApplication authorizerApplication = new AuthorizerApplication();
-
-//        BufferedReader br = new BufferedReader(
-//                new InputStreamReader(System.in));
-//        String line;
-//
-//        line = br.readLine();
-
+public class AuthorizerApplication {
+    public static void main(String[] args) throws IOException {
         Bank bank = Bank.init();
 
-        Thread t = new Thread(authorizerApplication);
-        t.start();
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        Scanner s = new Scanner(System.in);
-        String next = null;
-        while (s.hasNext() && !(next = s.next()).equals("stop")) {
-            try {
-                List<String> bankOperationsJson = new FileOperatorReader(next).read();
-                for (String bankOperationJson : bankOperationsJson) {
-                    ProcessInputOperation processInputOperation = new ProcessInputOperation(bank, bankOperationJson);
-                    ProcessInputOperationResult result = processInputOperation.process();
-                    if (result.hasNotViolations()) {
-                        bank = bank.update(result.getOperationInfo());
-                    }
-                    ProcessOutputOperation processOutputOperation = new ProcessOutputOperation(bank.getCurrentAccount(), result.getViolations());
-                    System.out.println(processOutputOperation.process());
+        String bankOperationJson = "";
+        while (!"stop".equals(bankOperationJson)) {
+            bankOperationJson = br.readLine();
+            if ("stop".equals(bankOperationJson)) {
+                break;
+            }
+            if (bankOperationJson != null) {
+                ProcessInputOperation processInputOperation = new ProcessInputOperation(bank, bankOperationJson);
+                ProcessInputOperationResult result = processInputOperation.process();
+                if (result.hasNotViolations()) {
+                    bank = bank.update(result.getOperationInfo());
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+                ProcessOutputOperation processOutputOperation = new ProcessOutputOperation(bank.getCurrentAccount(), result.getViolations());
+                System.out.println(processOutputOperation.process());
             }
         }
-        authorizerApplication.keepRunning = false;
-        t.interrupt();  // cancel current sleep.
+
+        br.close();
     }
 
 }
