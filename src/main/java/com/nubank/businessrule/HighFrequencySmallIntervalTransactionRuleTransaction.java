@@ -20,14 +20,16 @@ public class HighFrequencySmallIntervalTransactionRuleTransaction implements Tra
     }
 
     private boolean doesItViolatesHighFrequencySmallInterval(Bank bank, Transaction transactionToBeApproved) {
-        int numberOfTransactionsInLessThanTwoMinutes = 0;
+
+        NumberOfTransactionsCounter numberOfTransactionsInLessThanTwoMinutes = new NumberOfTransactionsCounter(0);
+
         for (Transaction transactionApproved : bank.getApprovedTransactions()) {
             Duration duration = Duration.between(transactionApproved.getTime(), transactionToBeApproved.getTime()).abs();
             if (duration.getSeconds() <= MAX_TRANSACTION_INTERVAL_TIME) {
-                numberOfTransactionsInLessThanTwoMinutes++;
+                numberOfTransactionsInLessThanTwoMinutes = numberOfTransactionsInLessThanTwoMinutes.increment();
             }
         }
         // Number of already transactions approved in less than two minutes taking as reference the incoming transaction.
-        return (numberOfTransactionsInLessThanTwoMinutes >= HIGH_FREQUENCY_SMALL_INTERVAL);
+        return numberOfTransactionsInLessThanTwoMinutes.isCounterBiggerEqualThan(HIGH_FREQUENCY_SMALL_INTERVAL);
     }
 }
