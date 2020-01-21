@@ -3,7 +3,7 @@ package com.nubank.model;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Transaction extends OperationInfo {
+public class Transaction implements OperationInfo {
 
     private final String merchant;
     private final int amount;

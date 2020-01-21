@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Objects;
 
-public final class Account extends OperationInfo {
+public final class Account implements OperationInfo {
     @SerializedName("active-card")
     private final boolean activeCard;
     @SerializedName("available-limit")
