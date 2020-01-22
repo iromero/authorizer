@@ -1,5 +1,6 @@
-package com.nubank;
+package com.nubank.service;
 
+import com.nubank.ProcessOutputOperation;
 import com.nubank.model.Account;
 import com.nubank.model.Violations;
 import io.vavr.collection.List;

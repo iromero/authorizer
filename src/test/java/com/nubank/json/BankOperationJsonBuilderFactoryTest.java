@@ -1,5 +1,8 @@
-package com.nubank;
+package com.nubank.json;
 
+import com.nubank.AccountOperation;
+import com.nubank.BankOperation;
+import com.nubank.TransactionOperation;
 import com.nubank.json.BankOperationJsonBuilderFactory;
 import com.nubank.model.Account;
 import com.nubank.model.Transaction;
@@ -14,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class BankOperationJsonBuilderFactoryTest {
 
     @Test
-    public void accountDeserializer() {
+    public void testAccountDeserializer() {
         //given
         String json = "{\"account\":{\"active-card\":true,\"available-limit\":100},\"violations\":[]}";
 
@@ -30,7 +33,7 @@ public class BankOperationJsonBuilderFactoryTest {
     }
 
     @Test
-    public void transactionDeserializer() {
+    public void testTransactionDeserializer() {
         //given
         String json = "{\"transaction\":{\"merchant\":\"Burger King\",\"amount\": 20,\"time\":\"2019-02-13T10:00:00.000Z\"}}";
 
@@ -48,7 +51,7 @@ public class BankOperationJsonBuilderFactoryTest {
     }
 
     @Test
-    public void accountSerializer() {
+    public void testAccountSerializer() {
         //given
         Account account = new Account(true, 100);
         AccountOperation operation = new AccountOperation(account);
@@ -62,7 +65,7 @@ public class BankOperationJsonBuilderFactoryTest {
     }
 
     @Test
-    public void transactionSerializer() {
+    public void testTransactionSerializer() {
         //given
         Transaction transaction = new Transaction("Burger King", 20, LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0));
         TransactionOperation transactionOperation = new TransactionOperation(transaction);

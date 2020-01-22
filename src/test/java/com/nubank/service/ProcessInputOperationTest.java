@@ -1,4 +1,4 @@
-package com.nubank;
+package com.nubank.service;
 
 import com.nubank.model.Account;
 import com.nubank.model.Bank;
@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ProcessInputOperationTest {
 
     @Test
-    public void noViolationWhenTryingAccountCreation() {
+    public void testNoViolationWhenTryingAccountCreation() {
         //given
         Bank bank = Bank.init();
         String accountOperationJson = "{\"account\": {\"active-card\": true, \"available-limit\": 100}}";
@@ -31,7 +31,7 @@ public class ProcessInputOperationTest {
     }
 
     @Test
-    public void accountAlreadyInitializedWhenTryingAccountCreation() {
+    public void testAccountAlreadyInitializedWhenTryingAccountCreation() {
         //given
         Bank bank = new Bank(new Account(true, 100), List.empty());
         String accountOperationJson = "{\"account\": {\"active-card\": true, \"available-limit\": 100}}";
@@ -45,7 +45,7 @@ public class ProcessInputOperationTest {
     }
 
     @Test
-    public void noViolationsWhenTryingTransactionAuthorization() {
+    public void testNoViolationsWhenTryingTransactionAuthorization() {
         //given
         Account currentAccount = new Account(true, 100);
         Bank bank = new Bank(currentAccount, List.empty());
@@ -60,7 +60,7 @@ public class ProcessInputOperationTest {
     }
 
     @Test
-    public void accountNoInitializedWhenTryingTransactionAuthorization() {
+    public void testAccountNoInitializedWhenTryingTransactionAuthorization() {
         //given
         Bank bank = Bank.init();//The account is not initialized.
         String transactionOperationJson = "{\"transaction\": {\"merchant\": \"Burger King\", \"amount\": 20, \"time\": \"2019-02-13T10:00:00.000Z\"}}";
@@ -74,7 +74,7 @@ public class ProcessInputOperationTest {
     }
 
     @Test
-    public void cardNotActiveWhenTryingTransactionAuthorization() {
+    public void testCardNotActiveWhenTryingTransactionAuthorization() {
         //given
         Account currentAccount = new Account(false, 100);
         Bank bank = new Bank(currentAccount, List.empty());
@@ -89,7 +89,7 @@ public class ProcessInputOperationTest {
     }
 
     @Test
-    public void insufficientLimitWhenTryingTransactionAuthorization() {
+    public void testInsufficientLimitWhenTryingTransactionAuthorization() {
         //given
         Account currentAccount = new Account(true, 80);
         Bank bank = new Bank(currentAccount, List.empty());
@@ -104,7 +104,7 @@ public class ProcessInputOperationTest {
     }
 
     @Test
-    public void highFrequencySmallIntervalWhenTryingTransactionAuthorization() {
+    public void testHighFrequencySmallIntervalWhenTryingTransactionAuthorization() {
         //given
         Account currentAccount = new Account(true, 100);
         List<Transaction> approvedTransactions = getApprovedTransactions();
@@ -120,7 +120,7 @@ public class ProcessInputOperationTest {
     }
 
     @Test
-    public void doubledTransactionWhenTryingTransactionAuthorization() {
+    public void testDoubledTransactionWhenTryingTransactionAuthorization() {
         //given
         Account currentAccount = new Account(true, 100);
         List<Transaction> approvedTransactions = getApprovedTransactions();

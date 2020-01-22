@@ -1,8 +1,5 @@
-package com.nubank;
+package com.nubank.model;
 
-import com.nubank.model.Account;
-import com.nubank.model.Bank;
-import com.nubank.model.Transaction;
 import io.vavr.collection.List;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class BankTest {
 
     @Test
-    public void accountInitialized() {
+    public void testAccountInitialized() {
         //given
         Bank bank = Bank.init();
         Account account = new Account(true, 100);
@@ -27,7 +24,7 @@ public class BankTest {
     }
 
     @Test
-    public void accountAvailableLimitAfterTransaction() {
+    public void testAccountAvailableLimitAfterTransaction() {
         //given
         Account account = new Account(true, 100);
         Bank bank = new Bank(account, List.empty());
@@ -42,7 +39,7 @@ public class BankTest {
     }
 
     @Test
-    public void approvedTransactionsAfterTransaction() {
+    public void testApprovedTransactionsAfterTransaction() {
         //given
         Account account = new Account(true, 100);
         List<Transaction> approvedTransactions = getApprovedTransactions();

@@ -1,4 +1,4 @@
-package com.nubank;
+package com.nubank.service;
 
 import com.nubank.model.Account;
 import com.nubank.model.Bank;
@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TransactionAuthorizationServiceTest {
 
     @Test
-    public void noViolations() {
+    public void testNoViolations() {
         //given
         Account currentAccount = new Account(true, 100);
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
@@ -32,7 +32,7 @@ public class TransactionAuthorizationServiceTest {
     }
 
     @Test
-    public void accountNoInitialized() {
+    public void testAccountNoInitialized() {
         //given
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionToBeApproved = new Transaction("Burger King", 20, dateTime);
@@ -46,7 +46,7 @@ public class TransactionAuthorizationServiceTest {
     }
 
     @Test
-    public void cardNotActive() {
+    public void testCardNotActive() {
         //given
         Account currentAccount = new Account(false, 100);
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
@@ -61,7 +61,7 @@ public class TransactionAuthorizationServiceTest {
     }
 
     @Test
-    public void insufficientLimit() {
+    public void testInsufficientLimit() {
         //given
         Account currentAccount = new Account(true, 80);
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
@@ -76,7 +76,7 @@ public class TransactionAuthorizationServiceTest {
     }
 
     @Test
-    public void highFrequencySmallInterval() {
+    public void testHighFrequencySmallInterval() {
         //given
         Account currentAccount = new Account(true, 100);
         List<Transaction> approvedTransactions = getApprovedTransactions();
@@ -92,7 +92,7 @@ public class TransactionAuthorizationServiceTest {
     }
 
     @Test
-    public void doubledTransaction() {
+    public void testDoubledTransaction() {
         //given
         Account currentAccount = new Account(true, 100);
         List<Transaction> approvedTransactions = getApprovedTransactions();

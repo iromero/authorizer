@@ -1,4 +1,4 @@
-package com.nubank;
+package com.nubank.service;
 
 import com.nubank.model.Account;
 import com.nubank.model.Bank;
@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class AccountCreationServiceTest {
 
     @Test
-    public void noViolations() {
+    public void testNoViolations() {
         //given
         Bank bank = Bank.init();//There is not account
 
@@ -24,7 +24,7 @@ public class AccountCreationServiceTest {
     }
 
     @Test
-    public void accountAlreadyExist() {
+    public void testAccountAlreadyExist() {
         //given
         Bank bank = new Bank(new Account(true, 100), List.empty());
 

@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class FileOperatorReaderTest {
 
     @Test
-    public void readAccountOperationFromFile() throws IOException {
+    public void testReadAccountOperationFromFile() throws IOException {
         //given
         String path = "C:/Users/ayoro/Documents/Interviews/NuBank/Authorizer/src/main/resources/accountInputOne";
 
