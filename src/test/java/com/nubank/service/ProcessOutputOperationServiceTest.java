@@ -1,6 +1,5 @@
 package com.nubank.service;
 
-import com.nubank.ProcessOutputOperation;
 import com.nubank.model.Account;
 import com.nubank.model.Violations;
 import io.vavr.collection.List;
@@ -8,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ProcessOutputOperationTest {
+public class ProcessOutputOperationServiceTest {
 
     @Test
     public void testAccountOutputWithoutViolations() {
@@ -17,8 +16,8 @@ public class ProcessOutputOperationTest {
         Violations violations = Violations.noViolations();
 
         //when
-        ProcessOutputOperation processOutputOperation = new ProcessOutputOperation(account, violations);
-        String jsonOutputResult = processOutputOperation.process();
+        ProcessOutputOperationService processOutputOperationService = new ProcessOutputOperationService(account, violations);
+        String jsonOutputResult = processOutputOperationService.process();
 
         //then
         String jsonOutputExpected = "{\"account\":{\"active-card\":true,\"available-limit\":100},\"violations\":[]}";
@@ -32,8 +31,8 @@ public class ProcessOutputOperationTest {
         Violations violations = new Violations(List.of("insufficient-limit", "high-frequency-small-interval"));
 
         //when
-        ProcessOutputOperation processOutputOperation = new ProcessOutputOperation(account, violations);
-        String jsonOutputResult = processOutputOperation.process();
+        ProcessOutputOperationService processOutputOperationService = new ProcessOutputOperationService(account, violations);
+        String jsonOutputResult = processOutputOperationService.process();
 
         //then
         String jsonOutputExpected = "{\"account\":{\"active-card\":true,\"available-limit\":100}," +

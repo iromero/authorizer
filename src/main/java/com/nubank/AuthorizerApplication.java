@@ -1,8 +1,9 @@
 package com.nubank;
 
 import com.nubank.model.Bank;
-import com.nubank.service.ProcessInputOperation;
+import com.nubank.service.ProcessInputOperationService;
 import com.nubank.service.ProcessInputOperationResult;
+import com.nubank.service.ProcessOutputOperationService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,13 +22,13 @@ public class AuthorizerApplication {
                 break;
             }
             if (bankOperationJson != null) {
-                ProcessInputOperation processInputOperation = new ProcessInputOperation(bank, bankOperationJson);
-                ProcessInputOperationResult result = processInputOperation.process();
+                ProcessInputOperationService processInputOperationService = new ProcessInputOperationService(bank, bankOperationJson);
+                ProcessInputOperationResult result = processInputOperationService.process();
                 if (result.hasNotViolations()) {
                     bank = bank.update(result.getOperationInfo());
                 }
-                ProcessOutputOperation processOutputOperation = new ProcessOutputOperation(bank.getCurrentAccount(), result.getViolations());
-                System.out.println(processOutputOperation.process());
+                ProcessOutputOperationService processOutputOperationService = new ProcessOutputOperationService(bank.getCurrentAccount(), result.getViolations());
+                System.out.println(processOutputOperationService.process());
             }
         }
 

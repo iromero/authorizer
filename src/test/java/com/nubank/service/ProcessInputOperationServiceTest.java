@@ -4,8 +4,6 @@ import com.nubank.model.Account;
 import com.nubank.model.Bank;
 import com.nubank.model.Transaction;
 import com.nubank.model.Violations;
-import com.nubank.service.ProcessInputOperation;
-import com.nubank.service.ProcessInputOperationResult;
 import io.vavr.collection.List;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +12,7 @@ import java.time.Month;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ProcessInputOperationTest {
+public class ProcessInputOperationServiceTest {
 
     @Test
     public void testNoViolationWhenTryingAccountCreation() {
@@ -23,8 +21,8 @@ public class ProcessInputOperationTest {
         String accountOperationJson = "{\"account\": {\"active-card\": true, \"available-limit\": 100}}";
 
         //when
-        ProcessInputOperation processInputOperation = new ProcessInputOperation(bank, accountOperationJson);
-        ProcessInputOperationResult result = processInputOperation.process();
+        ProcessInputOperationService processInputOperationService = new ProcessInputOperationService(bank, accountOperationJson);
+        ProcessInputOperationResult result = processInputOperationService.process();
 
         //then
         assertEquals(Violations.noViolations(), result.getViolations());
@@ -37,8 +35,8 @@ public class ProcessInputOperationTest {
         String accountOperationJson = "{\"account\": {\"active-card\": true, \"available-limit\": 100}}";
 
         //when
-        ProcessInputOperation processInputOperation = new ProcessInputOperation(bank, accountOperationJson);
-        ProcessInputOperationResult result = processInputOperation.process();
+        ProcessInputOperationService processInputOperationService = new ProcessInputOperationService(bank, accountOperationJson);
+        ProcessInputOperationResult result = processInputOperationService.process();
 
         //then
         assertEquals(Violations.accountAlreadyInitialized(), result.getViolations());
@@ -52,8 +50,8 @@ public class ProcessInputOperationTest {
         String transactionOperationJson = "{\"transaction\": {\"merchant\": \"Burger King\", \"amount\": 20, \"time\": \"2019-02-13T10:00:00.000Z\"}}";
 
         //when
-        ProcessInputOperation processInputOperation = new ProcessInputOperation(bank, transactionOperationJson);
-        ProcessInputOperationResult result = processInputOperation.process();
+        ProcessInputOperationService processInputOperationService = new ProcessInputOperationService(bank, transactionOperationJson);
+        ProcessInputOperationResult result = processInputOperationService.process();
 
         //then
         assertEquals(Violations.noViolations(), result.getViolations());
@@ -66,8 +64,8 @@ public class ProcessInputOperationTest {
         String transactionOperationJson = "{\"transaction\": {\"merchant\": \"Burger King\", \"amount\": 20, \"time\": \"2019-02-13T10:00:00.000Z\"}}";
 
         //when
-        ProcessInputOperation processInputOperation = new ProcessInputOperation(bank, transactionOperationJson);
-        ProcessInputOperationResult result = processInputOperation.process();
+        ProcessInputOperationService processInputOperationService = new ProcessInputOperationService(bank, transactionOperationJson);
+        ProcessInputOperationResult result = processInputOperationService.process();
 
         //then
         assertEquals(Violations.accountNotInitialized(), result.getViolations());
@@ -81,8 +79,8 @@ public class ProcessInputOperationTest {
         String transactionOperationJson = "{\"transaction\": {\"merchant\": \"Burger King\", \"amount\": 20, \"time\": \"2019-02-13T10:00:00.000Z\"}}";
 
         //when
-        ProcessInputOperation processInputOperation = new ProcessInputOperation(bank, transactionOperationJson);
-        ProcessInputOperationResult result = processInputOperation.process();
+        ProcessInputOperationService processInputOperationService = new ProcessInputOperationService(bank, transactionOperationJson);
+        ProcessInputOperationResult result = processInputOperationService.process();
 
         //then
         assertEquals(Violations.accountWithCardNotActive(), result.getViolations());
@@ -96,8 +94,8 @@ public class ProcessInputOperationTest {
         String transactionOperationJson = "{\"transaction\": {\"merchant\": \"Burger King\", \"amount\": 90, \"time\": \"2019-02-13T10:00:00.000Z\"}}";
 
         //when
-        ProcessInputOperation processInputOperation = new ProcessInputOperation(bank, transactionOperationJson);
-        ProcessInputOperationResult result = processInputOperation.process();
+        ProcessInputOperationService processInputOperationService = new ProcessInputOperationService(bank, transactionOperationJson);
+        ProcessInputOperationResult result = processInputOperationService.process();
 
         //then
         assertEquals(Violations.accountWithInsufficientLimits(), result.getViolations());
@@ -112,8 +110,8 @@ public class ProcessInputOperationTest {
         String transactionOperationJson = "{\"transaction\": {\"merchant\": \"Grills\", \"amount\": 20, \"time\": \"2019-02-13T10:01:30.000Z\"}}";
 
         //when
-        ProcessInputOperation processInputOperation = new ProcessInputOperation(bank, transactionOperationJson);
-        ProcessInputOperationResult result = processInputOperation.process();
+        ProcessInputOperationService processInputOperationService = new ProcessInputOperationService(bank, transactionOperationJson);
+        ProcessInputOperationResult result = processInputOperationService.process();
 
         //then
         assertEquals(Violations.accountWithHighFrequencySmallInterval(), result.getViolations());
@@ -128,8 +126,8 @@ public class ProcessInputOperationTest {
         String transactionOperationJson = "{\"transaction\": {\"merchant\": \"Mac Donall's\", \"amount\": 20, \"time\": \"2019-02-13T10:02:55.000Z\"}}";
 
         //when
-        ProcessInputOperation processInputOperation = new ProcessInputOperation(bank, transactionOperationJson);
-        ProcessInputOperationResult result = processInputOperation.process();
+        ProcessInputOperationService processInputOperationService = new ProcessInputOperationService(bank, transactionOperationJson);
+        ProcessInputOperationResult result = processInputOperationService.process();
 
         //then
         assertEquals(Violations.accountWithDoubleTransaction(), result.getViolations());

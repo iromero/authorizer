@@ -1,9 +1,8 @@
 package com.nubank.json;
 
-import com.nubank.AccountOperation;
-import com.nubank.BankOperation;
-import com.nubank.TransactionOperation;
-import com.nubank.json.BankOperationJsonBuilderFactory;
+import com.nubank.operation.AccountOperation;
+import com.nubank.operation.BankOperation;
+import com.nubank.operation.TransactionOperation;
 import com.nubank.model.Account;
 import com.nubank.model.Transaction;
 import org.junit.jupiter.api.Test;

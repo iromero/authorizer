@@ -2,9 +2,9 @@ package com.nubank.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.nubank.AccountOperation;
-import com.nubank.BankOperation;
-import com.nubank.TransactionOperation;
+import com.nubank.operation.AccountOperation;
+import com.nubank.operation.BankOperation;
+import com.nubank.operation.TransactionOperation;
 import io.vavr.gson.VavrGson;
 
 import java.time.LocalDateTime;

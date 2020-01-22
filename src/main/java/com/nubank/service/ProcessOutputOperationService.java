@@ -1,5 +1,6 @@
-package com.nubank;
+package com.nubank.service;
 
+import com.nubank.operation.AccountOperation;
 import com.nubank.json.BankOperationJsonBuilderFactory;
 import com.nubank.model.Account;
 import com.nubank.model.Violations;
@@ -7,12 +8,12 @@ import com.nubank.model.Violations;
 /**
  * Service to process the output of a bank operation. The output is a json representation with possible violations.
  */
-public class ProcessOutputOperation {
+public class ProcessOutputOperationService {
 
     private final Account currentAccount;
     private final Violations violations;
 
-    public ProcessOutputOperation(Account currentAccount, Violations violations) {
+    public ProcessOutputOperationService(Account currentAccount, Violations violations) {
         this.currentAccount = currentAccount;
         this.violations = violations;
     }

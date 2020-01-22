@@ -1,6 +1,5 @@
-package com.nubank;
+package com.nubank.operation;
 
-import com.google.gson.Gson;
 import com.nubank.model.Account;
 import com.nubank.model.Bank;
 import com.nubank.model.OperationInfo;

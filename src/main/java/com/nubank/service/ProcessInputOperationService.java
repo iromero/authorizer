@@ -1,6 +1,6 @@
 package com.nubank.service;
 
-import com.nubank.BankOperation;
+import com.nubank.operation.BankOperation;
 import com.nubank.json.BankOperationJsonBuilderFactory;
 import com.nubank.model.Bank;
 import com.nubank.model.Violations;
@@ -8,12 +8,12 @@ import com.nubank.model.Violations;
 /**
  * Service to process operations from input stream.
  */
-public class ProcessInputOperation {
+public class ProcessInputOperationService {
 
     private final Bank bank;
     private final String bankOperationJson;
 
-    public ProcessInputOperation(Bank bank, String bankOperationJson) {
+    public ProcessInputOperationService(Bank bank, String bankOperationJson) {
         this.bank = bank;
         this.bankOperationJson = bankOperationJson;
     }
