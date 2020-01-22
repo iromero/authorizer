@@ -9,6 +9,9 @@ import io.vavr.gson.VavrGson;
 
 import java.time.LocalDateTime;
 
+/**
+ * Factory to serialized/deserialize an account or transaction operation to/from json.
+ */
 public class BankOperationJsonBuilderFactory {
 
     private final Gson gson;
@@ -36,6 +39,12 @@ public class BankOperationJsonBuilderFactory {
         return gson.fromJson(json, TransactionOperation.class);
     }
 
+    /**
+     * Convert a Transaction or an Account operation object to Json
+     *
+     * @param bankOperation A transaction or an account operation object
+     * @return The Json String for a transaction or an account operation.
+     */
     public String toJson(BankOperation bankOperation) {
         return bankOperation.toJson(gson);
     }

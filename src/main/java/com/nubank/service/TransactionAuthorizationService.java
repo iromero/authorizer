@@ -6,6 +6,9 @@ import com.nubank.model.Transaction;
 import com.nubank.model.Violations;
 import io.vavr.collection.List;
 
+/**
+ * Service that use a list of business rules to validate a transaction operation.
+ */
 public class TransactionAuthorizationService implements OperationService {
 
     private final Bank bank;
@@ -18,17 +21,27 @@ public class TransactionAuthorizationService implements OperationService {
         this.businessRules = buildBusinessRules();
     }
 
+    /**
+     * Build a list of business rules to validate a transaction operation.
+     *
+     * @return a list of business rules to validate a transaction.
+     */
     public List<TransactionBusinessRule> buildBusinessRules() {
         List<TransactionBusinessRule> businessRuleList = List.of(
-                new AccountNotInitializedRuleTransaction(),
-                new AccountNoActiveRuleTransaction(),
-                new InsufficientLimitsTransactionRuleTransaction(),
-                new DoubleTransactionRuleTransaction(),
-                new HighFrequencySmallIntervalTransactionRuleTransaction()
+                new AccountNotInitializedTransactionRule(),
+                new AccountNoActiveTransactionRule(),
+                new InsufficientLimitsTransactionTransactionRule(),
+                new DoubleTransactionTransactionRule(),
+                new HighFrequencySmallIntervalTransactionTransactionRule()
         );
         return businessRuleList;
     }
 
+    /**
+     * Validate a transaction operation taking into account a list of business rules.
+     *
+     * @return Violations if the transaction does not approve all the business rules otherwise it returns no violations.
+     */
     @Override
     public Violations evalOperation() {
         Violations violations = new Violations();

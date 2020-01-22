@@ -3,6 +3,9 @@ package com.nubank.model;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+/**
+ * A representation for a transaction info.
+ */
 public class Transaction implements OperationInfo {
 
     private final String merchant;

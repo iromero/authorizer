@@ -4,6 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Objects;
 
+/**
+ * A representation for a bank account with a state and a available limit.
+ */
 public final class Account implements OperationInfo {
     @SerializedName("active-card")
     private final boolean activeCard;
@@ -23,6 +26,12 @@ public final class Account implements OperationInfo {
         return availableLimit;
     }
 
+    /**
+     * Debt for account a amount specified in a transaction.
+     *
+     * @param transactionToBeApproved The transaction with the amount to debt.
+     * @return a new instance of the account with the new available limit.
+     */
     public Account debt(Transaction transactionToBeApproved) {
         return new Account(activeCard, availableLimit - transactionToBeApproved.getAmount());
     }

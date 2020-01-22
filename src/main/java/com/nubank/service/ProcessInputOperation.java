@@ -5,6 +5,9 @@ import com.nubank.json.BankOperationJsonBuilderFactory;
 import com.nubank.model.Bank;
 import com.nubank.model.Violations;
 
+/**
+ * Service to process operations from input stream.
+ */
 public class ProcessInputOperation {
 
     private final Bank bank;
@@ -15,6 +18,13 @@ public class ProcessInputOperation {
         this.bankOperationJson = bankOperationJson;
     }
 
+    /**
+     * Process an json input stream bank operation, it could be an account or transaction operation.
+     * The process include validate the bank operation.
+     *
+     * @return The result of the process for the bank operation. The process could contains violation
+     * and the bank operation itself.
+     */
     public ProcessInputOperationResult process() {
         BankOperation bankOperation = new BankOperationJsonBuilderFactory().fromJson(bankOperationJson);
         BankOperationService service = new NuBankOperationService();

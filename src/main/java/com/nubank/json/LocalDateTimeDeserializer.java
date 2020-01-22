@@ -10,6 +10,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
+/**
+ * Deserialize a Json string to a DateTime object from an specific format.
+ */
 public class LocalDateTimeDeserializer implements JsonDeserializer<LocalDateTime> {
     @Override
     public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)

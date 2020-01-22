@@ -6,9 +6,20 @@ import com.nubank.model.Violations;
 
 import java.time.Duration;
 
-public class DoubleTransactionRuleTransaction implements TransactionBusinessRule {
+/**
+ * Business rule that validates if there are more than 1 similar transaction in a 2 minutes interval.
+ */
+public class DoubleTransactionTransactionRule implements TransactionBusinessRule {
     private static final int MAX_TRANSACTION_INTERVAL_TIME = 120;
 
+    /**
+     * Verify if there are more than 1 similar transaction in a 2 minutes interval.
+     *
+     * @param bank                    The bank with the existing approved transactions
+     * @param transactionToBeApproved The transaction that it needs to validate.
+     * @return If there is an approved transaction similar to the one that needs to be approved it returns a violation
+     * otherwise returns no violations.
+     */
     @Override
     public Violations evalOperation(Bank bank, Transaction transactionToBeApproved) {
         if (doesItViolatesDoubleTransaction(bank, transactionToBeApproved)) {

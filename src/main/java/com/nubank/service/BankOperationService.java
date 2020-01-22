@@ -5,6 +5,9 @@ import com.nubank.model.Bank;
 import com.nubank.TransactionOperation;
 import com.nubank.model.Violations;
 
+/**
+ * Interface for all the bank operations.
+ */
 public interface BankOperationService {
     Violations processOperation(Bank bank, AccountOperation account);
 

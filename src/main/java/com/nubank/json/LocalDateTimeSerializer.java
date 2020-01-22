@@ -9,6 +9,9 @@ import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Serialize a DateTime object to a Json string with an specific format.
+ */
 class LocalDateTimeSerializer implements JsonSerializer<LocalDateTime> {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd'T'HH:mm:ss.nnn'Z'");
 

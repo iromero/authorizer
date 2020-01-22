@@ -6,11 +6,22 @@ import com.nubank.model.Violations;
 
 import java.time.Duration;
 
-public class HighFrequencySmallIntervalTransactionRuleTransaction implements TransactionBusinessRule {
+/**
+ * Business rule that validates there are not more than 3 transactions on a 2 minutes interval.
+ */
+public class HighFrequencySmallIntervalTransactionTransactionRule implements TransactionBusinessRule {
 
     private static final int HIGH_FREQUENCY_SMALL_INTERVAL = 3;
     private static final int MAX_TRANSACTION_INTERVAL_TIME = 120;
 
+    /**
+     * Verify it there are more than 3 transactions on a 2 minutes interval.
+     *
+     * @param bank                    Bank with the exiting approved transactions.
+     * @param transactionToBeApproved The transaction that it needs to validate.
+     * @return if there are more than 3 transactions on a 2 minutes interval returns a violation
+     * otherwise returns no violations.
+     */
     @Override
     public Violations evalOperation(Bank bank, Transaction transactionToBeApproved) {
         if (doesItViolatesHighFrequencySmallInterval(bank, transactionToBeApproved)) {

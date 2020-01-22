@@ -1,8 +1,12 @@
 package com.nubank.model;
 
 import io.vavr.collection.List;
+
 import java.util.Objects;
 
+/**
+ * Violations for a bank operation.
+ */
 public class Violations {
     private static final String ACCOUNT_ALREADY_INITIALIZED = "account-already-initialized";
     private static final String ACCOUNT_NOT_INITIALIZED = "account-not-initialized";

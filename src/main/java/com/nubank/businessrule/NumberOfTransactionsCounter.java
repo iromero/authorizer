@@ -1,5 +1,8 @@
 package com.nubank.businessrule;
 
+/**
+ * Immutable counter.
+ */
 public class NumberOfTransactionsCounter {
     private int counter = 0;
 
