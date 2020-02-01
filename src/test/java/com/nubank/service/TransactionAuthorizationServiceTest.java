@@ -4,6 +4,8 @@ import com.nubank.model.Account;
 import com.nubank.model.Bank;
 import com.nubank.model.Transaction;
 import com.nubank.model.Violations;
+import io.vavr.collection.HashMap;
+import io.vavr.collection.Map;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -13,15 +15,15 @@ import io.vavr.collection.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TransactionAuthorizationServiceTest {
+class TransactionAuthorizationServiceTest {
 
     @Test
-    public void testNoViolations() {
+    void testNoViolations() {
         //given
         Account currentAccount = new Account("1", true, 100);
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionToBeApproved = new Transaction("1", "Burger King", 20, dateTime);
-        Bank bank = new Bank(currentAccount, List.empty());
+        Bank bank = new Bank(getCurrentAccounts(), List.empty());
 
         //when
         Violations violations = new TransactionAuthorizationService(bank, transactionToBeApproved).evalOperation();
@@ -31,7 +33,7 @@ public class TransactionAuthorizationServiceTest {
     }
 
     @Test
-    public void testAccountNoInitialized() {
+    void testAccountNoInitialized() {
         //given
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionToBeApproved = new Transaction("1", "Burger King", 20, dateTime);
@@ -45,12 +47,12 @@ public class TransactionAuthorizationServiceTest {
     }
 
     @Test
-    public void testCardNotActive() {
+    void testCardNotActive() {
         //given
-        Account currentAccount = new Account("1", false, 100);
+        Map<String,Account> currentAccounts = HashMap.ofEntries(Map.entry("1", new Account("1", false, 100)));
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionToBeApproved = new Transaction("1", "Burger King", 20, dateTime);
-        Bank bank = new Bank(currentAccount, List.empty());
+        Bank bank = new Bank(currentAccounts, List.empty());
 
         //when
         Violations violations = new TransactionAuthorizationService(bank, transactionToBeApproved).evalOperation();
@@ -60,12 +62,11 @@ public class TransactionAuthorizationServiceTest {
     }
 
     @Test
-    public void testInsufficientLimit() {
+    void testInsufficientLimit() {
         //given
-        Account currentAccount = new Account("1", true, 80);
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
-        Transaction transactionToBeApproved = new Transaction("1", "Burger King", 90, dateTime);
-        Bank bank = new Bank(currentAccount, List.empty());
+        Transaction transactionToBeApproved = new Transaction("1", "Burger King", 110, dateTime);
+        Bank bank = new Bank(getCurrentAccounts(), List.empty());
 
         //when
         Violations violations = new TransactionAuthorizationService(bank, transactionToBeApproved).evalOperation();
@@ -75,13 +76,12 @@ public class TransactionAuthorizationServiceTest {
     }
 
     @Test
-    public void testHighFrequencySmallInterval() {
+    void testHighFrequencySmallInterval() {
         //given
-        Account currentAccount = new Account("1", true, 100);
         List<Transaction> approvedTransactions = getApprovedTransactions();
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 1, 30, 0);
         Transaction transactionToBeApproved = new Transaction("1", "Grills", 20, dateTime);
-        Bank bank = new Bank(currentAccount, approvedTransactions);
+        Bank bank = new Bank(getCurrentAccounts(), approvedTransactions);
 
         //when
         Violations violations = new TransactionAuthorizationService(bank, transactionToBeApproved).evalOperation();
@@ -91,13 +91,12 @@ public class TransactionAuthorizationServiceTest {
     }
 
     @Test
-    public void testDoubledTransaction() {
+    void testDoubledTransaction() {
         //given
-        Account currentAccount = new Account("1", true, 100);
         List<Transaction> approvedTransactions = getApprovedTransactions();
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 2, 55, 0);
         Transaction transactionToBeApproved = new Transaction("1", "Mac Donall's", 20, dateTime);
-        Bank bank = new Bank(currentAccount, approvedTransactions);
+        Bank bank = new Bank(getCurrentAccounts(), approvedTransactions);
 
         //when
         Violations violations = new TransactionAuthorizationService(bank, transactionToBeApproved).evalOperation();
@@ -116,8 +115,10 @@ public class TransactionAuthorizationServiceTest {
         LocalDateTime dateTime3 = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 1, 55, 0);
         Transaction transactionApproved3 = new Transaction("1", "Presto", 20, dateTime3);
 
-        List<Transaction> approvedTransactions = List.of(transactionApproved1, transactionApproved2, transactionApproved3);
+        return List.of(transactionApproved1, transactionApproved2, transactionApproved3);
+    }
 
-        return approvedTransactions;
+    private Map<String, Account> getCurrentAccounts() {
+        return HashMap.ofEntries(Map.entry("1", new Account("1", true, 100)));
     }
 }

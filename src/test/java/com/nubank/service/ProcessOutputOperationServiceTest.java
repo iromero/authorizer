@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ProcessOutputOperationServiceTest {
+class ProcessOutputOperationServiceTest {
 
     @Test
-    public void testAccountOutputWithoutViolations() {
+    void testAccountOutputWithoutViolations() {
         //given
         Account account = new Account("1", true, 100);
         Violations violations = Violations.noViolations();
@@ -20,12 +20,12 @@ public class ProcessOutputOperationServiceTest {
         String jsonOutputResult = processOutputOperationService.process();
 
         //then
-        String jsonOutputExpected = "{\"account\":{\"id\":\"1\",\"active-card\":true,\"available-limit\":100},\"violations\":[]}";
+        String jsonOutputExpected = "{\"account\":{\"accountId\":\"1\",\"active-card\":true,\"available-limit\":100},\"violations\":[]}";
         assertEquals(jsonOutputExpected, jsonOutputResult);
     }
 
     @Test
-    public void testAccountOutputWithViolations() {
+    void testAccountOutputWithViolations() {
         //given
         Account account = new Account("1", true, 100);
         Violations violations = new Violations(List.of("insufficient-limit", "high-frequency-small-interval"));
@@ -35,7 +35,7 @@ public class ProcessOutputOperationServiceTest {
         String jsonOutputResult = processOutputOperationService.process();
 
         //then
-        String jsonOutputExpected = "{\"account\":{\"id\":\"1\",\"active-card\":true,\"available-limit\":100}," +
+        String jsonOutputExpected = "{\"account\":{\"accountId\":\"1\",\"active-card\":true,\"available-limit\":100}," +
                 "\"violations\":[\"insufficient-limit\",\"high-frequency-small-interval\"]}";
         assertEquals(jsonOutputExpected, jsonOutputResult);
     }

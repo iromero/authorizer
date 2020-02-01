@@ -1,5 +1,6 @@
 package com.nubank.businessrule;
 
+import com.nubank.model.Account;
 import com.nubank.model.Bank;
 import com.nubank.model.Violations;
 
@@ -14,8 +15,8 @@ public class AccountAlreadyInitializedRule implements AccountBusinessRule {
      * @return if there is an account already initialized returns a violation for that otherwise returns no violations
      */
     @Override
-    public Violations evalOperation(Bank bank) {
-        if (bank.existAccount()) {
+    public Violations evalOperation(Bank bank, Account account) {
+        if (bank.existAccount(account.getAccountId())) {
             return Violations.accountAlreadyInitialized();
         }
         return Violations.noViolations();

@@ -1,5 +1,6 @@
 package com.nubank.service;
 
+import com.nubank.model.Account;
 import com.nubank.operation.AccountOperation;
 import com.nubank.operation.TransactionOperation;
 import com.nubank.model.Bank;
@@ -12,7 +13,7 @@ import com.nubank.model.Violations;
 public class NuBankOperationService implements BankOperationService {
     @Override
     public Violations processOperation(Bank bank, AccountOperation accountOperation) {
-        return new AccountCreationService(bank).evalOperation();
+        return new AccountCreationService(bank, (Account) accountOperation.getOperationInfo()).evalOperation();
     }
 
     @Override

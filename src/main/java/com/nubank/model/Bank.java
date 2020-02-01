@@ -1,16 +1,19 @@
 package com.nubank.model;
 
+import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
+import io.vavr.collection.Map;
+import io.vavr.control.Option;
 
 /**
  * A representation of bank containing an account a the approved transactions.
  */
 public class Bank {
-    private final Account currentAccount;
+    private final Map<String, Account> currentAccounts;
     private final List<Transaction> approvedTransactions;
 
-    public Bank(Account currentAccount, List<Transaction> approvedTransactions) {
-        this.currentAccount = currentAccount;
+    public Bank(Map<String, Account> currentAccounts, List<Transaction> approvedTransactions) {
+        this.currentAccounts = currentAccounts;
         this.approvedTransactions = approvedTransactions;
     }
 
@@ -20,19 +23,15 @@ public class Bank {
      * @return instance of the bank without a account and an empty list of approved transactions.
      */
     public static Bank init() {
-        return new Bank(null, List.empty());
+        return new Bank(HashMap.empty(), List.empty());
     }
 
-    public boolean existAccount() {
-        return (currentAccount != null);
+    public boolean existAccount(String accountId) {
+        return currentAccounts.containsKey(accountId);
     }
 
-    public boolean noExistAccount() {
-        return (currentAccount == null);
-    }
-
-    public Account getCurrentAccount() {
-        return currentAccount;
+    public Option<Account> getCurrentAccount(String accountId) {
+        return currentAccounts.get(accountId);
     }
 
     public List<Transaction> getApprovedTransactions() {
@@ -47,7 +46,8 @@ public class Bank {
      * @return a new bank instance with the account and approved transactions updated.
      */
     public Bank update(OperationInfo operationInfo) {
-        if (currentAccount == null) {
+
+        if (!existAccount(operationInfo.getAccountId())) {
             return initializeAccount((Account) operationInfo);
         }
         return updateAccountAndApprovedTransactions((Transaction) operationInfo);
@@ -59,21 +59,24 @@ public class Bank {
      * @param account The account info
      * @return a new bank instance with the account initialize.
      */
-    public Bank initializeAccount(Account account) {
-        return new Bank(account, List.empty());
+    private Bank initializeAccount(Account account) {
+        return new Bank(currentAccounts.put(account.getAccountId(), account), List.empty());
     }
 
     /**
      * Add to the bank a new approved transaction and at same time create a new account instance
      * with a new available limit.
      *
-     * @param transaction
+     * @param transaction Transaction that contains the amount that will be used for the account limit update.
      * @return a new instance of the bank that contains a new instances of the account with a new available limit
      * and a new instance of approved transactions that contains the new one.
      */
-    public Bank updateAccountAndApprovedTransactions(Transaction transaction) {
+    Bank updateAccountAndApprovedTransactions(Transaction transaction) {
+        Option<Account> currentAccountOption = currentAccounts.get(transaction.getAccountId());
+        Account currentAccount = currentAccountOption.get();
         Account accountWithLimitUpdated = currentAccount.debt(transaction);
+        Map<String, Account> newCurrentAccounts = currentAccounts.put(transaction.getAccountId(), accountWithLimitUpdated);
         List<Transaction> transactionsApproved = approvedTransactions.append(transaction);
-        return new Bank(accountWithLimitUpdated, transactionsApproved);
+        return new Bank(newCurrentAccounts, transactionsApproved);
     }
 }

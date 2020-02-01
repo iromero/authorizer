@@ -17,7 +17,9 @@ public class InsufficientLimitsTransactionTransactionRule implements Transaction
      */
     @Override
     public Violations evalOperation(Bank bank, Transaction transactionToBeApproved) {
-        if (bank.existAccount() && bank.getCurrentAccount().isNotThereSufficientLimit(transactionToBeApproved.getAmount())) {
+        if (bank.existAccount(transactionToBeApproved.getAccountId())
+                && bank.getCurrentAccount(transactionToBeApproved.getAccountId()).get()
+                .isNotThereSufficientLimit(transactionToBeApproved.getAmount())) {
             return Violations.accountWithInsufficientLimits();
         }
         return Violations.noViolations();

@@ -18,7 +18,8 @@ public class AccountNoActiveTransactionRule implements TransactionBusinessRule {
      */
     @Override
     public Violations evalOperation(Bank bank, Transaction transactionToBeApproved) {
-        if (bank.existAccount() && bank.getCurrentAccount().isNotActive()) {
+        if (bank.existAccount(transactionToBeApproved.getAccountId())
+                && bank.getCurrentAccount(transactionToBeApproved.getAccountId()).get().isNotActive()) {
             return Violations.accountWithCardNotActive();
         }
         return Violations.noViolations();

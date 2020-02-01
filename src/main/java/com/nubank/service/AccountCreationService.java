@@ -2,6 +2,7 @@ package com.nubank.service;
 
 import com.nubank.businessrule.AccountAlreadyInitializedRule;
 import com.nubank.businessrule.AccountBusinessRule;
+import com.nubank.model.Account;
 import com.nubank.model.Bank;
 import com.nubank.model.Violations;
 import io.vavr.collection.List;
@@ -12,10 +13,12 @@ import io.vavr.collection.List;
 public class AccountCreationService implements OperationService {
 
     private final Bank bank;
+    private final Account account;
     private final List<AccountBusinessRule> businessRules;
 
-    public AccountCreationService(Bank bank) {
+    AccountCreationService(Bank bank, Account newAccount) {
         this.bank = bank;
+        this.account = newAccount;
         this.businessRules = buildBusinessRules();
     }
 
@@ -24,11 +27,10 @@ public class AccountCreationService implements OperationService {
      *
      * @return The list of business rules that are going to evaluate an account operation.
      */
-    public List<AccountBusinessRule> buildBusinessRules() {
-        List<AccountBusinessRule> businessRuleList = List.of(
+    private List<AccountBusinessRule> buildBusinessRules() {
+        return List.of(
                 new AccountAlreadyInitializedRule()
         );
-        return businessRuleList;
     }
 
     /**
@@ -41,7 +43,7 @@ public class AccountCreationService implements OperationService {
     public Violations evalOperation() {
         Violations violations = new Violations();
         for (AccountBusinessRule accountBusinessRule : businessRules) {
-            violations = violations.append(accountBusinessRule.evalOperation(bank));
+            violations = violations.append(accountBusinessRule.evalOperation(bank, account));
         }
         return violations;
     }

@@ -4,7 +4,9 @@ import com.nubank.model.Account;
 import com.nubank.model.Bank;
 import com.nubank.model.Transaction;
 import com.nubank.model.Violations;
+import io.vavr.collection.HashMap;
 import io.vavr.collection.List;
+import io.vavr.collection.Map;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -12,13 +14,13 @@ import java.time.Month;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ProcessInputOperationServiceTest {
+class ProcessInputOperationServiceTest {
 
     @Test
-    public void testNoViolationWhenTryingAccountCreation() {
+    void testNoViolationWhenTryingAccountCreation() {
         //given
         Bank bank = Bank.init();
-        String accountOperationJson = "{\"account\": {\"active-card\": true, \"available-limit\": 100}}";
+        String accountOperationJson = "{\"account\": {\"accountId\":\"1\",\"active-card\": true, \"available-limit\": 100}}";
 
         //when
         ProcessInputOperationService processInputOperationService = new ProcessInputOperationService(bank, accountOperationJson);
@@ -29,10 +31,10 @@ public class ProcessInputOperationServiceTest {
     }
 
     @Test
-    public void testAccountAlreadyInitializedWhenTryingAccountCreation() {
+    void testAccountAlreadyInitializedWhenTryingAccountCreation() {
         //given
-        Bank bank = new Bank(new Account("1", true, 100), List.empty());
-        String accountOperationJson = "{\"account\": {\"active-card\": true, \"available-limit\": 100}}";
+        Bank bank = new Bank(getCurrentAccounts(), List.empty());
+        String accountOperationJson = "{\"account\": {\"accountId\":\"1\",\"active-card\": true, \"available-limit\": 100}}";
 
         //when
         ProcessInputOperationService processInputOperationService = new ProcessInputOperationService(bank, accountOperationJson);
@@ -43,11 +45,11 @@ public class ProcessInputOperationServiceTest {
     }
 
     @Test
-    public void testNoViolationsWhenTryingTransactionAuthorization() {
+    void testNoViolationsWhenTryingTransactionAuthorization() {
         //given
         Account currentAccount = new Account("1", true, 100);
-        Bank bank = new Bank(currentAccount, List.empty());
-        String transactionOperationJson = "{\"transaction\": {\"merchant\": \"Burger King\", \"amount\": 20, \"time\": \"2019-02-13T10:00:00.000Z\"}}";
+        Bank bank = new Bank(getCurrentAccounts(), List.empty());
+        String transactionOperationJson = "{\"transaction\": {\"accountId\":\"1\", \"merchant\": \"Burger King\", \"amount\": 20, \"time\": \"2019-02-13T10:00:00.000Z\"}}";
 
         //when
         ProcessInputOperationService processInputOperationService = new ProcessInputOperationService(bank, transactionOperationJson);
@@ -58,10 +60,10 @@ public class ProcessInputOperationServiceTest {
     }
 
     @Test
-    public void testAccountNoInitializedWhenTryingTransactionAuthorization() {
+    void testAccountNoInitializedWhenTryingTransactionAuthorization() {
         //given
         Bank bank = Bank.init();//The account is not initialized.
-        String transactionOperationJson = "{\"transaction\": {\"merchant\": \"Burger King\", \"amount\": 20, \"time\": \"2019-02-13T10:00:00.000Z\"}}";
+        String transactionOperationJson = "{\"transaction\": {\"accountId\":\"1\", \"merchant\": \"Burger King\", \"amount\": 20, \"time\": \"2019-02-13T10:00:00.000Z\"}}";
 
         //when
         ProcessInputOperationService processInputOperationService = new ProcessInputOperationService(bank, transactionOperationJson);
@@ -72,11 +74,11 @@ public class ProcessInputOperationServiceTest {
     }
 
     @Test
-    public void testCardNotActiveWhenTryingTransactionAuthorization() {
+    void testCardNotActiveWhenTryingTransactionAuthorization() {
         //given
-        Account currentAccount = new Account("1", false, 100);
-        Bank bank = new Bank(currentAccount, List.empty());
-        String transactionOperationJson = "{\"transaction\": {\"merchant\": \"Burger King\", \"amount\": 20, \"time\": \"2019-02-13T10:00:00.000Z\"}}";
+        Map<String,Account> currentAccounts = HashMap.ofEntries(Map.entry("1", new Account("1", false, 100)));
+        Bank bank = new Bank(currentAccounts, List.empty());
+        String transactionOperationJson = "{\"transaction\": {\"accountId\":\"1\", \"merchant\": \"Burger King\", \"amount\": 20, \"time\": \"2019-02-13T10:00:00.000Z\"}}";
 
         //when
         ProcessInputOperationService processInputOperationService = new ProcessInputOperationService(bank, transactionOperationJson);
@@ -87,11 +89,10 @@ public class ProcessInputOperationServiceTest {
     }
 
     @Test
-    public void testInsufficientLimitWhenTryingTransactionAuthorization() {
+    void testInsufficientLimitWhenTryingTransactionAuthorization() {
         //given
-        Account currentAccount = new Account("1", true, 80);
-        Bank bank = new Bank(currentAccount, List.empty());
-        String transactionOperationJson = "{\"transaction\": {\"merchant\": \"Burger King\", \"amount\": 90, \"time\": \"2019-02-13T10:00:00.000Z\"}}";
+        Bank bank = new Bank(getCurrentAccounts(), List.empty());
+        String transactionOperationJson = "{\"transaction\": {\"accountId\":\"1\", \"merchant\": \"Burger King\", \"amount\": 110, \"time\": \"2019-02-13T10:00:00.000Z\"}}";
 
         //when
         ProcessInputOperationService processInputOperationService = new ProcessInputOperationService(bank, transactionOperationJson);
@@ -102,12 +103,12 @@ public class ProcessInputOperationServiceTest {
     }
 
     @Test
-    public void testHighFrequencySmallIntervalWhenTryingTransactionAuthorization() {
+    void testHighFrequencySmallIntervalWhenTryingTransactionAuthorization() {
         //given
         Account currentAccount = new Account("1", true, 100);
         List<Transaction> approvedTransactions = getApprovedTransactions();
-        Bank bank = new Bank(currentAccount, approvedTransactions);
-        String transactionOperationJson = "{\"transaction\": {\"merchant\": \"Grills\", \"amount\": 20, \"time\": \"2019-02-13T10:01:30.000Z\"}}";
+        Bank bank = new Bank(getCurrentAccounts(), approvedTransactions);
+        String transactionOperationJson = "{\"transaction\": {\"accountId\":\"1\", \"merchant\": \"Grills\", \"amount\": 20, \"time\": \"2019-02-13T10:01:30.000Z\"}}";
 
         //when
         ProcessInputOperationService processInputOperationService = new ProcessInputOperationService(bank, transactionOperationJson);
@@ -118,12 +119,11 @@ public class ProcessInputOperationServiceTest {
     }
 
     @Test
-    public void testDoubledTransactionWhenTryingTransactionAuthorization() {
+    void testDoubledTransactionWhenTryingTransactionAuthorization() {
         //given
-        Account currentAccount = new Account("1", true, 100);
         List<Transaction> approvedTransactions = getApprovedTransactions();
-        Bank bank = new Bank(currentAccount, approvedTransactions);
-        String transactionOperationJson = "{\"transaction\": {\"merchant\": \"Mac Donall's\", \"amount\": 20, \"time\": \"2019-02-13T10:02:55.000Z\"}}";
+        Bank bank = new Bank(getCurrentAccounts(), approvedTransactions);
+        String transactionOperationJson = "{\"transaction\": {\"accountId\":\"1\", \"merchant\": \"Mac Donall's\", \"amount\": 20, \"time\": \"2019-02-13T10:02:55.000Z\"}}";
 
         //when
         ProcessInputOperationService processInputOperationService = new ProcessInputOperationService(bank, transactionOperationJson);
@@ -143,8 +143,10 @@ public class ProcessInputOperationServiceTest {
         LocalDateTime dateTime3 = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 1, 55, 0);
         Transaction transactionApproved3 = new Transaction("1", "Presto", 20, dateTime3);
 
-        List<Transaction> approvedTransactions = List.of(transactionApproved1, transactionApproved2, transactionApproved3);
+        return List.of(transactionApproved1, transactionApproved2, transactionApproved3);
+    }
 
-        return approvedTransactions;
+    private Map<String, Account> getCurrentAccounts() {
+        return HashMap.ofEntries(Map.entry("1", new Account("1", true, 100)));
     }
 }

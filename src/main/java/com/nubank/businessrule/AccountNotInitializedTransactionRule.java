@@ -17,7 +17,7 @@ public class AccountNotInitializedTransactionRule implements TransactionBusiness
      */
     @Override
     public Violations evalOperation(Bank bank, Transaction transactionToBeApproved) {
-        if (!bank.existAccount()) {
+        if (!bank.existAccount(transactionToBeApproved.getAccountId())) {
             return Violations.accountNotInitialized();
         }
         return Violations.noViolations();
