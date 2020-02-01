@@ -10,12 +10,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class AuthorizerApplication {
+
+    private static String STOP_CRITERIA = "stop";
+
     public static void main(String[] args) throws IOException {
         Bank bank = Bank.init();
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-        String bankOperationJson = "";
+        String bankOperationJson = "";//Java Strings are immutable
         while (!"stop".equals(bankOperationJson)) {
             bankOperationJson = br.readLine();
             if ("stop".equals(bankOperationJson)) {
@@ -25,10 +28,12 @@ public class AuthorizerApplication {
                 ProcessInputOperationService processInputOperationService = new ProcessInputOperationService(bank, bankOperationJson);
                 ProcessInputOperationResult result = processInputOperationService.process();
                 if (result.hasNotViolations()) {
-                    bank = bank.update(result.getOperationInfo());
+                    bank = bank.update(result.getOperationInfo());//Update the account available limit as well as the
+                    // approved transaction list.
                 }
-                ProcessOutputOperationService processOutputOperationService = new ProcessOutputOperationService(bank.getCurrentAccount(), result.getViolations());
-                System.out.println(processOutputOperationService.process());
+                ProcessOutputOperationService processOutputOperationService = new ProcessOutputOperationService(
+                        bank.getCurrentAccount(), result.getViolations());
+                System.out.println(processOutputOperationService.process());//Transform the object result to JSON
             }
         }
 
