@@ -3,7 +3,6 @@ package com.nubank.service;
 import com.nubank.model.Account;
 import com.nubank.model.Bank;
 import com.nubank.model.Violations;
-import com.nubank.service.AccountCreationService;
 import io.vavr.collection.List;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +25,7 @@ public class AccountCreationServiceTest {
     @Test
     public void testAccountAlreadyExist() {
         //given
-        Bank bank = new Bank(new Account(true, 100), List.empty());
+        Bank bank = new Bank(new Account("1", true, 100), List.empty());
 
         //when
         Violations violations = new AccountCreationService(bank).evalOperation();

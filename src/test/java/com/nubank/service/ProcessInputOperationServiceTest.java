@@ -31,7 +31,7 @@ public class ProcessInputOperationServiceTest {
     @Test
     public void testAccountAlreadyInitializedWhenTryingAccountCreation() {
         //given
-        Bank bank = new Bank(new Account(true, 100), List.empty());
+        Bank bank = new Bank(new Account("1", true, 100), List.empty());
         String accountOperationJson = "{\"account\": {\"active-card\": true, \"available-limit\": 100}}";
 
         //when
@@ -45,7 +45,7 @@ public class ProcessInputOperationServiceTest {
     @Test
     public void testNoViolationsWhenTryingTransactionAuthorization() {
         //given
-        Account currentAccount = new Account(true, 100);
+        Account currentAccount = new Account("1", true, 100);
         Bank bank = new Bank(currentAccount, List.empty());
         String transactionOperationJson = "{\"transaction\": {\"merchant\": \"Burger King\", \"amount\": 20, \"time\": \"2019-02-13T10:00:00.000Z\"}}";
 
@@ -74,7 +74,7 @@ public class ProcessInputOperationServiceTest {
     @Test
     public void testCardNotActiveWhenTryingTransactionAuthorization() {
         //given
-        Account currentAccount = new Account(false, 100);
+        Account currentAccount = new Account("1", false, 100);
         Bank bank = new Bank(currentAccount, List.empty());
         String transactionOperationJson = "{\"transaction\": {\"merchant\": \"Burger King\", \"amount\": 20, \"time\": \"2019-02-13T10:00:00.000Z\"}}";
 
@@ -89,7 +89,7 @@ public class ProcessInputOperationServiceTest {
     @Test
     public void testInsufficientLimitWhenTryingTransactionAuthorization() {
         //given
-        Account currentAccount = new Account(true, 80);
+        Account currentAccount = new Account("1", true, 80);
         Bank bank = new Bank(currentAccount, List.empty());
         String transactionOperationJson = "{\"transaction\": {\"merchant\": \"Burger King\", \"amount\": 90, \"time\": \"2019-02-13T10:00:00.000Z\"}}";
 
@@ -104,7 +104,7 @@ public class ProcessInputOperationServiceTest {
     @Test
     public void testHighFrequencySmallIntervalWhenTryingTransactionAuthorization() {
         //given
-        Account currentAccount = new Account(true, 100);
+        Account currentAccount = new Account("1", true, 100);
         List<Transaction> approvedTransactions = getApprovedTransactions();
         Bank bank = new Bank(currentAccount, approvedTransactions);
         String transactionOperationJson = "{\"transaction\": {\"merchant\": \"Grills\", \"amount\": 20, \"time\": \"2019-02-13T10:01:30.000Z\"}}";
@@ -120,7 +120,7 @@ public class ProcessInputOperationServiceTest {
     @Test
     public void testDoubledTransactionWhenTryingTransactionAuthorization() {
         //given
-        Account currentAccount = new Account(true, 100);
+        Account currentAccount = new Account("1", true, 100);
         List<Transaction> approvedTransactions = getApprovedTransactions();
         Bank bank = new Bank(currentAccount, approvedTransactions);
         String transactionOperationJson = "{\"transaction\": {\"merchant\": \"Mac Donall's\", \"amount\": 20, \"time\": \"2019-02-13T10:02:55.000Z\"}}";
@@ -135,13 +135,13 @@ public class ProcessInputOperationServiceTest {
 
     private List<Transaction> getApprovedTransactions() {
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
-        Transaction transactionApproved1 = new Transaction("Burger King", 20, dateTime);
+        Transaction transactionApproved1 = new Transaction("1", "Burger King", 20, dateTime);
 
         LocalDateTime dateTime2 = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 1, 0, 0);
-        Transaction transactionApproved2 = new Transaction("Mac Donall's", 20, dateTime2);
+        Transaction transactionApproved2 = new Transaction("1", "Mac Donall's", 20, dateTime2);
 
         LocalDateTime dateTime3 = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 1, 55, 0);
-        Transaction transactionApproved3 = new Transaction("Presto", 20, dateTime3);
+        Transaction transactionApproved3 = new Transaction("1", "Presto", 20, dateTime3);
 
         List<Transaction> approvedTransactions = List.of(transactionApproved1, transactionApproved2, transactionApproved3);
 

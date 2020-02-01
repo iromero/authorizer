@@ -8,14 +8,21 @@ import java.util.Objects;
  */
 public class Transaction implements OperationInfo {
 
+    private final String accountId;
     private final String merchant;
     private final int amount;
     private final LocalDateTime time;
 
-    public Transaction(String merchant, int amount, LocalDateTime time) {
+
+    public Transaction(String accountId, String merchant, int amount, LocalDateTime time) {
+        this.accountId = accountId;
         this.merchant = merchant;
         this.amount = amount;
         this.time = time;
+    }
+
+    public String getAccountId() {
+        return accountId;
     }
 
     public int getAmount() {

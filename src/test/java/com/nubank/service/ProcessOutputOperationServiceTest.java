@@ -12,7 +12,7 @@ public class ProcessOutputOperationServiceTest {
     @Test
     public void testAccountOutputWithoutViolations() {
         //given
-        Account account = new Account(true, 100);
+        Account account = new Account("1", true, 100);
         Violations violations = Violations.noViolations();
 
         //when
@@ -20,14 +20,14 @@ public class ProcessOutputOperationServiceTest {
         String jsonOutputResult = processOutputOperationService.process();
 
         //then
-        String jsonOutputExpected = "{\"account\":{\"active-card\":true,\"available-limit\":100},\"violations\":[]}";
+        String jsonOutputExpected = "{\"account\":{\"id\":\"1\",\"active-card\":true,\"available-limit\":100},\"violations\":[]}";
         assertEquals(jsonOutputExpected, jsonOutputResult);
     }
 
     @Test
     public void testAccountOutputWithViolations() {
         //given
-        Account account = new Account(true, 100);
+        Account account = new Account("1", true, 100);
         Violations violations = new Violations(List.of("insufficient-limit", "high-frequency-small-interval"));
 
         //when
@@ -35,7 +35,7 @@ public class ProcessOutputOperationServiceTest {
         String jsonOutputResult = processOutputOperationService.process();
 
         //then
-        String jsonOutputExpected = "{\"account\":{\"active-card\":true,\"available-limit\":100}," +
+        String jsonOutputExpected = "{\"account\":{\"id\":\"1\",\"active-card\":true,\"available-limit\":100}," +
                 "\"violations\":[\"insufficient-limit\",\"high-frequency-small-interval\"]}";
         assertEquals(jsonOutputExpected, jsonOutputResult);
     }
