@@ -32,7 +32,8 @@ public class TransactionAuthorizationService implements OperationService {
                 new AccountNoActiveTransactionRule(),
                 new InsufficientLimitsTransactionTransactionRule(),
                 new DoubleTransactionTransactionRule(),
-                new HighFrequencySmallIntervalTransactionTransactionRule()
+                new HighFrequencySmallIntervalTransactionTransactionRule(),
+                new MaxAmountExpendTransactionRule()
         );
         return businessRuleList;
     }

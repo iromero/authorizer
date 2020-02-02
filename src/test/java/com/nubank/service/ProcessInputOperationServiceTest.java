@@ -92,7 +92,7 @@ public class ProcessInputOperationServiceTest {
     public void testInsufficientLimitWhenTryingTransactionAuthorization() {
         //given
         Bank bank = new Bank(getCurrentAccounts(), getEmptyTransactionsForCurrentAccounts());
-        String transactionOperationJson = "{\"transaction\": {\"accountId\":\"1\", \"merchant\": \"Burger King\", \"amount\": 110, \"time\": \"2019-02-13T10:00:00.000Z\"}}";
+        String transactionOperationJson = "{\"transaction\": {\"accountId\":\"2\", \"merchant\": \"Burger King\", \"amount\": 110, \"time\": \"2019-02-13T10:00:00.000Z\"}}";
 
         //when
         ProcessInputOperationService processInputOperationService = new ProcessInputOperationService(bank, transactionOperationJson);
@@ -130,6 +130,21 @@ public class ProcessInputOperationServiceTest {
         assertEquals(Violations.accountWithDoubleTransaction(), result.getViolations());
     }
 
+    @Test
+    public void testMaxAmountTransactions() {
+        //given
+        Bank bank = new Bank(getCurrentAccounts(), getApprovedTransactions());
+        String transactionOperationJson = "{\"transaction\": {\"accountId\":\"1\", \"merchant\": \"Mixtures\", \"amount\": 120, \"time\": \"2019-02-13T10:02:02.000Z\"}}";
+
+        //when
+        ProcessInputOperationService processInputOperationService = new ProcessInputOperationService(bank, transactionOperationJson);
+        ProcessInputOperationResult result = processInputOperationService.process();
+
+        //then
+        assertEquals(Violations.maxAmountExpend(), result.getViolations());
+    }
+
+
     private Map<String, List<Transaction>> getApprovedTransactions() {
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionApproved1 = new Transaction("1", "Burger King", 20, dateTime);
@@ -149,8 +164,8 @@ public class ProcessInputOperationServiceTest {
 
     private Map<String, Account> getCurrentAccounts() {
         return HashMap.ofEntries(
-                Map.entry("1", new Account("1", true, 100)),
-                Map.entry("2", new Account("2", true, 150)),
+                Map.entry("1", new Account("1", true, 200)),
+                Map.entry("2", new Account("2", true, 100)),
                 Map.entry("3", new Account("3", false, 100))
         );
     }

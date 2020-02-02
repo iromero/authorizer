@@ -14,6 +14,7 @@ public class Violations {
     private static final String CARD_NOT_ACTIVE = "card-not-active";
     private static final String HIGH_FREQUENCY_SMALL_INTERVAL = "high-frequency-small-interval";
     private static final String DOUBLE_TRANSACTION = "double-transaction";
+    private static final String MAX_AMOUNT_EXPEND = "max-amount-expend";
     private final List<String> violations;
 
     public Violations(List<String> violations) {
@@ -54,6 +55,10 @@ public class Violations {
 
     public static Violations accountWithDoubleTransaction() {
         return new Violations(List.of(DOUBLE_TRANSACTION));
+    }
+
+    public static Violations maxAmountExpend() {
+        return new Violations(List.of(MAX_AMOUNT_EXPEND));
     }
 
     public boolean hasNotViolations() {

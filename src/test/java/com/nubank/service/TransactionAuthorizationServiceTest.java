@@ -92,7 +92,7 @@ public class TransactionAuthorizationServiceTest {
     public void testInsufficientLimit() {
         //given
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
-        Transaction transactionToBeApproved = new Transaction("1", "Burger King", 110, dateTime);
+        Transaction transactionToBeApproved = new Transaction("2", "Burger King", 70, dateTime);
         Bank bank = new Bank(getCurrentAccounts(), getEmptyTransactionsForCurrentAccounts());
 
         //when
@@ -130,6 +130,20 @@ public class TransactionAuthorizationServiceTest {
         assertEquals(Violations.accountWithDoubleTransaction(), violations);
     }
 
+    @Test
+    public void testMaxAmountTransactions() {
+        //given
+        LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 2, 02, 0);
+        Transaction transactionToBeApproved = new Transaction("1", "Mixtures", 120, dateTime);
+        Bank bank = new Bank(getCurrentAccounts(), getApprovedTransactions());
+
+        //when
+        Violations violations = new TransactionAuthorizationService(bank, transactionToBeApproved).evalOperation();
+
+        //then
+        assertEquals(Violations.maxAmountExpend(), violations);
+    }
+
     private Map<String, List<Transaction>> getApprovedTransactions() {
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionApproved1 = new Transaction("1", "Burger King", 20, dateTime);
@@ -149,8 +163,8 @@ public class TransactionAuthorizationServiceTest {
 
     private Map<String, Account> getCurrentAccounts() {
         return HashMap.ofEntries(
-                Map.entry("1", new Account("1", true, 100)),
-                Map.entry("2", new Account("2", true, 150)),
+                Map.entry("1", new Account("1", true, 200)),
+                Map.entry("2", new Account("2", true, 50)),
                 Map.entry("3", new Account("3", false, 100))
         );
     }
