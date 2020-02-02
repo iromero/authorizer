@@ -11,8 +11,6 @@ import java.io.InputStreamReader;
 
 public class AuthorizerApplication {
 
-    private static String STOP_CRITERIA = "stop";
-
     public static void main(String[] args) throws IOException {
         Bank bank = Bank.init();
 
@@ -36,7 +34,6 @@ public class AuthorizerApplication {
                 System.out.println(processOutputOperationService.process());//Transform the object result to JSON
             }
         }
-
         br.close();
     }
 

@@ -22,14 +22,15 @@ public class DoubleTransactionTransactionRule implements TransactionBusinessRule
      */
     @Override
     public Violations evalOperation(Bank bank, Transaction transactionToBeApproved) {
-        if (doesItViolatesDoubleTransaction(bank, transactionToBeApproved)) {
+        if (bank.existAccount(transactionToBeApproved.getAccountId()) &&
+                doesItViolatesDoubleTransaction(bank, transactionToBeApproved)) {
             return Violations.accountWithDoubleTransaction();
         }
         return Violations.noViolations();
     }
 
     private boolean doesItViolatesDoubleTransaction(Bank bank, Transaction transactionToBeApproved) {
-        for (Transaction transactionApproved : bank.getApprovedTransactions()) {
+        for (Transaction transactionApproved : bank.getApprovedTransactions(transactionToBeApproved.getAccountId()).get()) {
             Duration duration = Duration.between(transactionApproved.getTime(), transactionToBeApproved.getTime()).abs();
             if (transactionApproved.sameAmountAndMerchant(transactionToBeApproved) && duration.getSeconds() <= MAX_TRANSACTION_INTERVAL_TIME) {
                 return true;

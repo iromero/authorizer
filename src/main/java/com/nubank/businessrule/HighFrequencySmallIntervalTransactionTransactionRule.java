@@ -24,7 +24,8 @@ public class HighFrequencySmallIntervalTransactionTransactionRule implements Tra
      */
     @Override
     public Violations evalOperation(Bank bank, Transaction transactionToBeApproved) {
-        if (doesItViolatesHighFrequencySmallInterval(bank, transactionToBeApproved)) {
+        if (bank.existAccount(transactionToBeApproved.getAccountId()) &&
+                doesItViolatesHighFrequencySmallInterval(bank, transactionToBeApproved)) {
             return Violations.accountWithHighFrequencySmallInterval();
         }
         return Violations.noViolations();
@@ -34,7 +35,7 @@ public class HighFrequencySmallIntervalTransactionTransactionRule implements Tra
 
         NumberOfTransactionsCounter numberOfTransactionsInLessThanTwoMinutes = new NumberOfTransactionsCounter(0);
 
-        for (Transaction transactionApproved : bank.getApprovedTransactions()) {
+        for (Transaction transactionApproved : bank.getApprovedTransactions(transactionToBeApproved.getAccountId()).get()) {
             Duration duration = Duration.between(transactionApproved.getTime(), transactionToBeApproved.getTime()).abs();
             if (duration.getSeconds() <= MAX_TRANSACTION_INTERVAL_TIME) {
                 numberOfTransactionsInLessThanTwoMinutes = numberOfTransactionsInLessThanTwoMinutes.increment();

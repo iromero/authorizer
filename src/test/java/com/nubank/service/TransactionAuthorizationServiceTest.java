@@ -20,10 +20,9 @@ class TransactionAuthorizationServiceTest {
     @Test
     void testNoViolations() {
         //given
-        Account currentAccount = new Account("1", true, 100);
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionToBeApproved = new Transaction("1", "Burger King", 20, dateTime);
-        Bank bank = new Bank(getCurrentAccounts(), List.empty());
+        Bank bank = new Bank(getCurrentAccounts(), getEmptyTransactionsForCurrentAccounts());
 
         //when
         Violations violations = new TransactionAuthorizationService(bank, transactionToBeApproved).evalOperation();
@@ -47,12 +46,40 @@ class TransactionAuthorizationServiceTest {
     }
 
     @Test
+    void testAccountNoInitializedWithOtherExistingAccounts() {
+        //given
+        LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
+        Transaction transactionToBeApproved = new Transaction("4", "Burger King", 20, dateTime);
+        Bank bank = new Bank(getCurrentAccounts(), getEmptyTransactionsForCurrentAccounts());
+
+        //when
+        Violations violations = new TransactionAuthorizationService(bank, transactionToBeApproved).evalOperation();
+
+        //then
+        assertEquals(Violations.accountNotInitialized(), violations);
+    }
+
+    @Test
     void testCardNotActive() {
         //given
-        Map<String,Account> currentAccounts = HashMap.ofEntries(Map.entry("1", new Account("1", false, 100)));
+        Map<String, Account> currentAccounts = HashMap.ofEntries(Map.entry("1", new Account("1", false, 100)));
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionToBeApproved = new Transaction("1", "Burger King", 20, dateTime);
-        Bank bank = new Bank(currentAccounts, List.empty());
+        Bank bank = new Bank(currentAccounts, getEmptyTransactionsForCurrentAccounts());
+
+        //when
+        Violations violations = new TransactionAuthorizationService(bank, transactionToBeApproved).evalOperation();
+
+        //then
+        assertEquals(Violations.accountWithCardNotActive(), violations);
+    }
+
+    @Test
+    void testCardNotActiveWithMoreThanOneAccount() {
+        //given
+        LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
+        Transaction transactionToBeApproved = new Transaction("3", "Burger King", 20, dateTime);
+        Bank bank = new Bank(getCurrentAccounts(), getEmptyTransactionsForCurrentAccounts());
 
         //when
         Violations violations = new TransactionAuthorizationService(bank, transactionToBeApproved).evalOperation();
@@ -66,7 +93,7 @@ class TransactionAuthorizationServiceTest {
         //given
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionToBeApproved = new Transaction("1", "Burger King", 110, dateTime);
-        Bank bank = new Bank(getCurrentAccounts(), List.empty());
+        Bank bank = new Bank(getCurrentAccounts(), getEmptyTransactionsForCurrentAccounts());
 
         //when
         Violations violations = new TransactionAuthorizationService(bank, transactionToBeApproved).evalOperation();
@@ -78,10 +105,9 @@ class TransactionAuthorizationServiceTest {
     @Test
     void testHighFrequencySmallInterval() {
         //given
-        List<Transaction> approvedTransactions = getApprovedTransactions();
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 1, 30, 0);
         Transaction transactionToBeApproved = new Transaction("1", "Grills", 20, dateTime);
-        Bank bank = new Bank(getCurrentAccounts(), approvedTransactions);
+        Bank bank = new Bank(getCurrentAccounts(), getApprovedTransactions());
 
         //when
         Violations violations = new TransactionAuthorizationService(bank, transactionToBeApproved).evalOperation();
@@ -93,10 +119,9 @@ class TransactionAuthorizationServiceTest {
     @Test
     void testDoubledTransaction() {
         //given
-        List<Transaction> approvedTransactions = getApprovedTransactions();
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 2, 55, 0);
         Transaction transactionToBeApproved = new Transaction("1", "Mac Donall's", 20, dateTime);
-        Bank bank = new Bank(getCurrentAccounts(), approvedTransactions);
+        Bank bank = new Bank(getCurrentAccounts(), getApprovedTransactions());
 
         //when
         Violations violations = new TransactionAuthorizationService(bank, transactionToBeApproved).evalOperation();
@@ -105,7 +130,7 @@ class TransactionAuthorizationServiceTest {
         assertEquals(Violations.accountWithDoubleTransaction(), violations);
     }
 
-    private List<Transaction> getApprovedTransactions() {
+    private Map<String, List<Transaction>> getApprovedTransactions() {
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionApproved1 = new Transaction("1", "Burger King", 20, dateTime);
 
@@ -115,10 +140,26 @@ class TransactionAuthorizationServiceTest {
         LocalDateTime dateTime3 = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 1, 55, 0);
         Transaction transactionApproved3 = new Transaction("1", "Presto", 20, dateTime3);
 
-        return List.of(transactionApproved1, transactionApproved2, transactionApproved3);
+        return HashMap.ofEntries(
+                Map.entry("1", List.of(transactionApproved1, transactionApproved2, transactionApproved3)),
+                Map.entry("2", List.empty()),
+                Map.entry("3", List.empty())
+        );
     }
 
     private Map<String, Account> getCurrentAccounts() {
-        return HashMap.ofEntries(Map.entry("1", new Account("1", true, 100)));
+        return HashMap.ofEntries(
+                Map.entry("1", new Account("1", true, 100)),
+                Map.entry("2", new Account("2", true, 150)),
+                Map.entry("3", new Account("3", false, 100))
+        );
+    }
+
+    private Map<String, List<Transaction>> getEmptyTransactionsForCurrentAccounts() {
+        return HashMap.ofEntries(
+                Map.entry("1", List.empty()),
+                Map.entry("2", List.empty()),
+                Map.entry("3", List.empty())
+        );
     }
 }

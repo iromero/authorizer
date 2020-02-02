@@ -33,7 +33,7 @@ class ProcessInputOperationServiceTest {
     @Test
     void testAccountAlreadyInitializedWhenTryingAccountCreation() {
         //given
-        Bank bank = new Bank(getCurrentAccounts(), List.empty());
+        Bank bank = new Bank(getCurrentAccounts(), getEmptyTransactionsForCurrentAccounts());
         String accountOperationJson = "{\"account\": {\"accountId\":\"1\",\"active-card\": true, \"available-limit\": 100}}";
 
         //when
@@ -48,7 +48,7 @@ class ProcessInputOperationServiceTest {
     void testNoViolationsWhenTryingTransactionAuthorization() {
         //given
         Account currentAccount = new Account("1", true, 100);
-        Bank bank = new Bank(getCurrentAccounts(), List.empty());
+        Bank bank = new Bank(getCurrentAccounts(), getEmptyTransactionsForCurrentAccounts());
         String transactionOperationJson = "{\"transaction\": {\"accountId\":\"1\", \"merchant\": \"Burger King\", \"amount\": 20, \"time\": \"2019-02-13T10:00:00.000Z\"}}";
 
         //when
@@ -76,8 +76,8 @@ class ProcessInputOperationServiceTest {
     @Test
     void testCardNotActiveWhenTryingTransactionAuthorization() {
         //given
-        Map<String,Account> currentAccounts = HashMap.ofEntries(Map.entry("1", new Account("1", false, 100)));
-        Bank bank = new Bank(currentAccounts, List.empty());
+        Map<String, Account> currentAccounts = HashMap.ofEntries(Map.entry("1", new Account("1", false, 100)));
+        Bank bank = new Bank(currentAccounts, getEmptyTransactionsForCurrentAccounts());
         String transactionOperationJson = "{\"transaction\": {\"accountId\":\"1\", \"merchant\": \"Burger King\", \"amount\": 20, \"time\": \"2019-02-13T10:00:00.000Z\"}}";
 
         //when
@@ -91,7 +91,7 @@ class ProcessInputOperationServiceTest {
     @Test
     void testInsufficientLimitWhenTryingTransactionAuthorization() {
         //given
-        Bank bank = new Bank(getCurrentAccounts(), List.empty());
+        Bank bank = new Bank(getCurrentAccounts(), getEmptyTransactionsForCurrentAccounts());
         String transactionOperationJson = "{\"transaction\": {\"accountId\":\"1\", \"merchant\": \"Burger King\", \"amount\": 110, \"time\": \"2019-02-13T10:00:00.000Z\"}}";
 
         //when
@@ -105,9 +105,7 @@ class ProcessInputOperationServiceTest {
     @Test
     void testHighFrequencySmallIntervalWhenTryingTransactionAuthorization() {
         //given
-        Account currentAccount = new Account("1", true, 100);
-        List<Transaction> approvedTransactions = getApprovedTransactions();
-        Bank bank = new Bank(getCurrentAccounts(), approvedTransactions);
+        Bank bank = new Bank(getCurrentAccounts(), getApprovedTransactions());
         String transactionOperationJson = "{\"transaction\": {\"accountId\":\"1\", \"merchant\": \"Grills\", \"amount\": 20, \"time\": \"2019-02-13T10:01:30.000Z\"}}";
 
         //when
@@ -121,8 +119,7 @@ class ProcessInputOperationServiceTest {
     @Test
     void testDoubledTransactionWhenTryingTransactionAuthorization() {
         //given
-        List<Transaction> approvedTransactions = getApprovedTransactions();
-        Bank bank = new Bank(getCurrentAccounts(), approvedTransactions);
+        Bank bank = new Bank(getCurrentAccounts(), getApprovedTransactions());
         String transactionOperationJson = "{\"transaction\": {\"accountId\":\"1\", \"merchant\": \"Mac Donall's\", \"amount\": 20, \"time\": \"2019-02-13T10:02:55.000Z\"}}";
 
         //when
@@ -133,7 +130,7 @@ class ProcessInputOperationServiceTest {
         assertEquals(Violations.accountWithDoubleTransaction(), result.getViolations());
     }
 
-    private List<Transaction> getApprovedTransactions() {
+    private Map<String, List<Transaction>> getApprovedTransactions() {
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionApproved1 = new Transaction("1", "Burger King", 20, dateTime);
 
@@ -143,10 +140,26 @@ class ProcessInputOperationServiceTest {
         LocalDateTime dateTime3 = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 1, 55, 0);
         Transaction transactionApproved3 = new Transaction("1", "Presto", 20, dateTime3);
 
-        return List.of(transactionApproved1, transactionApproved2, transactionApproved3);
+        return HashMap.ofEntries(
+                Map.entry("1", List.of(transactionApproved1, transactionApproved2, transactionApproved3)),
+                Map.entry("2", List.empty()),
+                Map.entry("3", List.empty())
+        );
     }
 
     private Map<String, Account> getCurrentAccounts() {
-        return HashMap.ofEntries(Map.entry("1", new Account("1", true, 100)));
+        return HashMap.ofEntries(
+                Map.entry("1", new Account("1", true, 100)),
+                Map.entry("2", new Account("2", true, 150)),
+                Map.entry("3", new Account("3", false, 100))
+        );
+    }
+
+    private Map<String, List<Transaction>> getEmptyTransactionsForCurrentAccounts() {
+        return HashMap.ofEntries(
+                Map.entry("1", List.empty()),
+                Map.entry("2", List.empty()),
+                Map.entry("3", List.empty())
+        );
     }
 }

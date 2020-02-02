@@ -10,9 +10,9 @@ import io.vavr.control.Option;
  */
 public class Bank {
     private final Map<String, Account> currentAccounts;
-    private final List<Transaction> approvedTransactions;
+    private final Map<String, List<Transaction>> approvedTransactions;
 
-    public Bank(Map<String, Account> currentAccounts, List<Transaction> approvedTransactions) {
+    public Bank(Map<String, Account> currentAccounts, Map<String, List<Transaction>> approvedTransactions) {
         this.currentAccounts = currentAccounts;
         this.approvedTransactions = approvedTransactions;
     }
@@ -23,7 +23,7 @@ public class Bank {
      * @return instance of the bank without a account and an empty list of approved transactions.
      */
     public static Bank init() {
-        return new Bank(HashMap.empty(), List.empty());
+        return new Bank(HashMap.empty(), HashMap.empty());
     }
 
     public boolean existAccount(String accountId) {
@@ -34,8 +34,8 @@ public class Bank {
         return currentAccounts.get(accountId);
     }
 
-    public List<Transaction> getApprovedTransactions() {
-        return approvedTransactions;
+    public Option<List<Transaction>> getApprovedTransactions(String accountId) {
+        return approvedTransactions.get(accountId);
     }
 
     /**
@@ -60,7 +60,8 @@ public class Bank {
      * @return a new bank instance with the account initialize.
      */
     private Bank initializeAccount(Account account) {
-        return new Bank(currentAccounts.put(account.getAccountId(), account), List.empty());
+        return new Bank(currentAccounts.put(account.getAccountId(), account),
+                approvedTransactions.put(account.getAccountId(), List.empty()));
     }
 
     /**
@@ -76,7 +77,8 @@ public class Bank {
         Account currentAccount = currentAccountOption.get();
         Account accountWithLimitUpdated = currentAccount.debt(transaction);
         Map<String, Account> newCurrentAccounts = currentAccounts.put(transaction.getAccountId(), accountWithLimitUpdated);
-        List<Transaction> transactionsApproved = approvedTransactions.append(transaction);
-        return new Bank(newCurrentAccounts, transactionsApproved);
+        List<Transaction> transactionsApproved = approvedTransactions.get(transaction.getAccountId()).get().append(transaction);
+        Map<String, List<Transaction>> newTransactionsApproved = approvedTransactions.put(transaction.getAccountId(), transactionsApproved);
+        return new Bank(newCurrentAccounts, newTransactionsApproved);
     }
 }
