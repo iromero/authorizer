@@ -4,16 +4,17 @@ import com.nubank.operation.AccountOperation;
 import com.nubank.json.BankOperationJsonBuilderFactory;
 import com.nubank.model.Account;
 import com.nubank.model.Violations;
+import io.vavr.control.Option;
 
 /**
  * Service to process the output of a bank operation. The output is a json representation with possible violations.
  */
 public class ProcessOutputOperationService {
 
-    private final Account currentAccount;
+    private final Option<Account> currentAccount;
     private final Violations violations;
 
-    public ProcessOutputOperationService(Account currentAccount, Violations violations) {
+    public ProcessOutputOperationService(Option<Account> currentAccount, Violations violations) {
         this.currentAccount = currentAccount;
         this.violations = violations;
     }
@@ -25,7 +26,7 @@ public class ProcessOutputOperationService {
      * the list of possible violations.
      */
     public String process() {
-        AccountOperation accountStatusWithoutViolations = new AccountOperation(currentAccount, violations);
+        AccountOperation accountStatusWithoutViolations = new AccountOperation(currentAccount.getOrNull(), violations);
         String operationOutputResultJson = new BankOperationJsonBuilderFactory().toJson(accountStatusWithoutViolations);
         return operationOutputResultJson;
     }
