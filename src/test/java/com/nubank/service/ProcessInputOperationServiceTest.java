@@ -14,10 +14,10 @@ import java.time.Month;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ProcessInputOperationServiceTest {
+public class ProcessInputOperationServiceTest {
 
     @Test
-    void testNoViolationWhenTryingAccountCreation() {
+    public void testNoViolationWhenTryingAccountCreation() {
         //given
         Bank bank = Bank.init();
         String accountOperationJson = "{\"account\": {\"accountId\":\"1\",\"active-card\": true, \"available-limit\": 100}}";
@@ -31,7 +31,7 @@ class ProcessInputOperationServiceTest {
     }
 
     @Test
-    void testAccountAlreadyInitializedWhenTryingAccountCreation() {
+    public void testAccountAlreadyInitializedWhenTryingAccountCreation() {
         //given
         Bank bank = new Bank(getCurrentAccounts(), getEmptyTransactionsForCurrentAccounts());
         String accountOperationJson = "{\"account\": {\"accountId\":\"1\",\"active-card\": true, \"available-limit\": 100}}";
@@ -45,7 +45,7 @@ class ProcessInputOperationServiceTest {
     }
 
     @Test
-    void testNoViolationsWhenTryingTransactionAuthorization() {
+    public void testNoViolationsWhenTryingTransactionAuthorization() {
         //given
         Account currentAccount = new Account("1", true, 100);
         Bank bank = new Bank(getCurrentAccounts(), getEmptyTransactionsForCurrentAccounts());
@@ -60,7 +60,7 @@ class ProcessInputOperationServiceTest {
     }
 
     @Test
-    void testAccountNoInitializedWhenTryingTransactionAuthorization() {
+    public void testAccountNoInitializedWhenTryingTransactionAuthorization() {
         //given
         Bank bank = Bank.init();//The account is not initialized.
         String transactionOperationJson = "{\"transaction\": {\"accountId\":\"1\", \"merchant\": \"Burger King\", \"amount\": 20, \"time\": \"2019-02-13T10:00:00.000Z\"}}";
@@ -74,7 +74,7 @@ class ProcessInputOperationServiceTest {
     }
 
     @Test
-    void testCardNotActiveWhenTryingTransactionAuthorization() {
+    public void testCardNotActiveWhenTryingTransactionAuthorization() {
         //given
         Map<String, Account> currentAccounts = HashMap.ofEntries(Map.entry("1", new Account("1", false, 100)));
         Bank bank = new Bank(currentAccounts, getEmptyTransactionsForCurrentAccounts());
@@ -89,7 +89,7 @@ class ProcessInputOperationServiceTest {
     }
 
     @Test
-    void testInsufficientLimitWhenTryingTransactionAuthorization() {
+    public void testInsufficientLimitWhenTryingTransactionAuthorization() {
         //given
         Bank bank = new Bank(getCurrentAccounts(), getEmptyTransactionsForCurrentAccounts());
         String transactionOperationJson = "{\"transaction\": {\"accountId\":\"1\", \"merchant\": \"Burger King\", \"amount\": 110, \"time\": \"2019-02-13T10:00:00.000Z\"}}";
@@ -103,7 +103,7 @@ class ProcessInputOperationServiceTest {
     }
 
     @Test
-    void testHighFrequencySmallIntervalWhenTryingTransactionAuthorization() {
+    public void testHighFrequencySmallIntervalWhenTryingTransactionAuthorization() {
         //given
         Bank bank = new Bank(getCurrentAccounts(), getApprovedTransactions());
         String transactionOperationJson = "{\"transaction\": {\"accountId\":\"1\", \"merchant\": \"Grills\", \"amount\": 20, \"time\": \"2019-02-13T10:01:30.000Z\"}}";
@@ -117,7 +117,7 @@ class ProcessInputOperationServiceTest {
     }
 
     @Test
-    void testDoubledTransactionWhenTryingTransactionAuthorization() {
+    public void testDoubledTransactionWhenTryingTransactionAuthorization() {
         //given
         Bank bank = new Bank(getCurrentAccounts(), getApprovedTransactions());
         String transactionOperationJson = "{\"transaction\": {\"accountId\":\"1\", \"merchant\": \"Mac Donall's\", \"amount\": 20, \"time\": \"2019-02-13T10:02:55.000Z\"}}";

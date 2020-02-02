@@ -10,10 +10,10 @@ import java.time.Month;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class BankTest {
+public class BankTest {
 
     @Test
-    void testAccountInitialized() {
+    public void testAccountInitialized() {
         //given
         Bank bank = Bank.init();
         Account account = new Account("1", true, 100);
@@ -26,7 +26,7 @@ class BankTest {
     }
 
     @Test
-    void testAccountAvailableLimitAfterTransaction() {
+    public void testAccountAvailableLimitAfterTransaction() {
         //given
         Bank bank = new Bank(getCurrentAccounts(), getEmptyTransactionsForCurrentAccounts());
         Transaction transaction = new Transaction("1", "Burger King", 20,
@@ -41,7 +41,7 @@ class BankTest {
     }
 
     @Test
-    void testApprovedTransactionsAfterTransaction() {
+    public void testApprovedTransactionsAfterTransaction() {
         //given
         List<Transaction> approvedTransactions = getApprovedTransactions().get("1").get();
         Bank bank = new Bank(getCurrentAccounts(), getApprovedTransactions());

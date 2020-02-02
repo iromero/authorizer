@@ -11,10 +11,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class AccountCreationServiceTest {
+public class AccountCreationServiceTest {
 
     @Test
-    void testNoViolations() {
+    public void testNoViolations() {
         //given
         Bank bank = Bank.init();//There is not account
         Account account = new Account("1", true, 200);
@@ -27,7 +27,7 @@ class AccountCreationServiceTest {
     }
 
     @Test
-    void testNoViolationExistingOtherAccounts() {
+    public void testNoViolationExistingOtherAccounts() {
         //give
         Bank bank = new Bank(getCurrentAccounts(), getEmptyTransactionsForCurrentAccounts());
         Account newAccount = new Account("2", true, 300);
@@ -40,7 +40,7 @@ class AccountCreationServiceTest {
     }
 
     @Test
-    void testAccountAlreadyExist() {
+    public void testAccountAlreadyExist() {
         //given
         Bank bank = new Bank(getCurrentAccounts(), getEmptyTransactionsForCurrentAccounts());
         Account account = new Account("1", true, 200);

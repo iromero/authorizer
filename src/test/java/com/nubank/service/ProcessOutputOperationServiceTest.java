@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class ProcessOutputOperationServiceTest {
+public class ProcessOutputOperationServiceTest {
 
     @Test
-    void testAccountOutputWithoutViolations() {
+    public void testAccountOutputWithoutViolations() {
         //given
         Account account = new Account("1", true, 100);
         Violations violations = Violations.noViolations();
@@ -25,7 +25,7 @@ class ProcessOutputOperationServiceTest {
     }
 
     @Test
-    void testAccountOutputWithViolations() {
+    public void testAccountOutputWithViolations() {
         //given
         Account account = new Account("1", true, 100);
         Violations violations = new Violations(List.of("insufficient-limit", "high-frequency-small-interval"));

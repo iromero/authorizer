@@ -13,10 +13,10 @@ import java.time.Month;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class BankOperationJsonBuilderFactoryTest {
+public class BankOperationJsonBuilderFactoryTest {
 
     @Test
-    void testAccountDeserializer() {
+    public void testAccountDeserializer() {
         //given
         String json = "{\"account\":{\"accountId\":\"1\",\"active-card\":true,\"available-limit\":100},\"violations\":[]}";
 
@@ -33,7 +33,7 @@ class BankOperationJsonBuilderFactoryTest {
     }
 
     @Test
-    void testTransactionDeserializer() {
+    public void testTransactionDeserializer() {
         //given
         String json = "{\"transaction\":{\"accountId\":\"1\", \"merchant\":\"Burger King\",\"amount\": 20,\"time\":\"2019-02-13T10:00:00.000Z\"}}";
 
@@ -52,7 +52,7 @@ class BankOperationJsonBuilderFactoryTest {
     }
 
     @Test
-    void testAccountSerializer() {
+    public void testAccountSerializer() {
         //given
         Account account = new Account("1", true, 100);
         AccountOperation operation = new AccountOperation(account);
@@ -66,7 +66,7 @@ class BankOperationJsonBuilderFactoryTest {
     }
 
     @Test
-    void testTransactionSerializer() {
+    public void testTransactionSerializer() {
         //given
         Transaction transaction = new Transaction("1", "Burger King", 20, LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0));
         TransactionOperation transactionOperation = new TransactionOperation(transaction);

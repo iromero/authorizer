@@ -15,10 +15,10 @@ import io.vavr.collection.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class TransactionAuthorizationServiceTest {
+public class TransactionAuthorizationServiceTest {
 
     @Test
-    void testNoViolations() {
+    public void testNoViolations() {
         //given
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionToBeApproved = new Transaction("1", "Burger King", 20, dateTime);
@@ -32,7 +32,7 @@ class TransactionAuthorizationServiceTest {
     }
 
     @Test
-    void testAccountNoInitialized() {
+    public void testAccountNoInitialized() {
         //given
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionToBeApproved = new Transaction("1", "Burger King", 20, dateTime);
@@ -46,7 +46,7 @@ class TransactionAuthorizationServiceTest {
     }
 
     @Test
-    void testAccountNoInitializedWithOtherExistingAccounts() {
+    public void testAccountNoInitializedWithOtherExistingAccounts() {
         //given
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionToBeApproved = new Transaction("4", "Burger King", 20, dateTime);
@@ -60,7 +60,7 @@ class TransactionAuthorizationServiceTest {
     }
 
     @Test
-    void testCardNotActive() {
+    public void testCardNotActive() {
         //given
         Map<String, Account> currentAccounts = HashMap.ofEntries(Map.entry("1", new Account("1", false, 100)));
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
@@ -75,7 +75,7 @@ class TransactionAuthorizationServiceTest {
     }
 
     @Test
-    void testCardNotActiveWithMoreThanOneAccount() {
+    public void testCardNotActiveWithMoreThanOneAccount() {
         //given
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionToBeApproved = new Transaction("3", "Burger King", 20, dateTime);
@@ -89,7 +89,7 @@ class TransactionAuthorizationServiceTest {
     }
 
     @Test
-    void testInsufficientLimit() {
+    public void testInsufficientLimit() {
         //given
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionToBeApproved = new Transaction("1", "Burger King", 110, dateTime);
@@ -103,7 +103,7 @@ class TransactionAuthorizationServiceTest {
     }
 
     @Test
-    void testHighFrequencySmallInterval() {
+    public void testHighFrequencySmallInterval() {
         //given
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 1, 30, 0);
         Transaction transactionToBeApproved = new Transaction("1", "Grills", 20, dateTime);
@@ -117,7 +117,7 @@ class TransactionAuthorizationServiceTest {
     }
 
     @Test
-    void testDoubledTransaction() {
+    public void testDoubledTransaction() {
         //given
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 2, 55, 0);
         Transaction transactionToBeApproved = new Transaction("1", "Mac Donall's", 20, dateTime);
