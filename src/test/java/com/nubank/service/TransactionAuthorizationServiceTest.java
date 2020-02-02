@@ -107,7 +107,7 @@ class TransactionAuthorizationServiceTest {
         //given
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 1, 30, 0);
         Transaction transactionToBeApproved = new Transaction("1", "Grills", 20, dateTime);
-        Bank bank = new Bank(getCurrentAccounts(), getApprovedTransactions()) ;
+        Bank bank = new Bank(getCurrentAccounts(), getApprovedTransactions());
 
         //when
         Violations violations = new TransactionAuthorizationService(bank, transactionToBeApproved).evalOperation();
