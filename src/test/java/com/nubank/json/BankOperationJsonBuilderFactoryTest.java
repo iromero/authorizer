@@ -1,10 +1,12 @@
 package com.nubank.json;
 
+import com.nubank.model.Transfer;
 import com.nubank.operation.AccountOperation;
 import com.nubank.operation.BankOperation;
 import com.nubank.operation.TransactionOperation;
 import com.nubank.model.Account;
 import com.nubank.model.Transaction;
+import com.nubank.operation.TransferOperation;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -52,6 +54,25 @@ public class BankOperationJsonBuilderFactoryTest {
     }
 
     @Test
+    public void testTransferDeserializer() {
+        //given
+        String json = "{\"transfer\":{\"accountId\":\"1\", \"source\":\"Davivienda Bank\",\"amount\": 100,\"time\":\"2019-02-13T10:00:00.000Z\"}}";
+
+        //when
+        BankOperation bankOperation = new BankOperationJsonBuilderFactory().fromJson(json);
+
+        //then
+        assertTrue(bankOperation instanceof TransferOperation);
+        LocalDateTime time = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
+        TransferOperation operation = (TransferOperation) bankOperation;
+        Transfer transfer = (Transfer) operation.getOperationInfo();
+        assertEquals("1", transfer.getAccountId());
+        assertEquals("Davivienda Bank", transfer.getSource());
+        assertEquals(100, transfer.getAmount());
+        assertEquals(time, transfer.getTime());
+    }
+
+    @Test
     public void testAccountSerializer() {
         //given
         Account account = new Account("1", true, 100);
@@ -77,6 +98,20 @@ public class BankOperationJsonBuilderFactoryTest {
         //then
         String transactionJsonExpected = "{\"transaction\":{\"accountId\":\"1\",\"merchant\":\"Burger King\",\"amount\":20,\"time\":\"2019-02-13T10:00:00.000Z\"}}";
         assertEquals(transactionJsonExpected, transactionJson);
+    }
+
+    @Test
+    public void testTransferSerializer() {
+        //given
+        Transfer transfer = new Transfer("1", "Davivienda Bank", 20, LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0));
+        TransferOperation transferOperation = new TransferOperation(transfer);
+
+        //when
+        String transferJson = new BankOperationJsonBuilderFactory().toJson(transferOperation);
+
+        //then
+        String transactionJsonExpected = "{\"transfer\":{\"accountId\":\"1\",\"source\":\"Davivienda Bank\",\"amount\":20,\"time\":\"2019-02-13T10:00:00.000Z\"}}";
+        assertEquals(transactionJsonExpected, transferJson);
     }
 
 }

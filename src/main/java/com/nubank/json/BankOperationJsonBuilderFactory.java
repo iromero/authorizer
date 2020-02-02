@@ -2,9 +2,11 @@ package com.nubank.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.nubank.model.Transfer;
 import com.nubank.operation.AccountOperation;
 import com.nubank.operation.BankOperation;
 import com.nubank.operation.TransactionOperation;
+import com.nubank.operation.TransferOperation;
 import io.vavr.gson.VavrGson;
 
 import java.time.LocalDateTime;
@@ -28,7 +30,14 @@ public class BankOperationJsonBuilderFactory {
         if (json.startsWith("{\"transaction")) {
             return buildTransaction(json);
         }
+        if (json.startsWith("{\"transfer")) {
+            return buildTransfer(json);
+        }
         return buildAccount(json);
+    }
+
+    private BankOperation buildTransfer(String json) {
+        return gson.fromJson(json, TransferOperation.class);
     }
 
     AccountOperation buildAccount(String json) {
