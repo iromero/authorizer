@@ -11,10 +11,19 @@ import io.vavr.control.Option;
 public class Bank {
     private final Map<String, Account> currentAccounts;
     private final Map<String, List<Transaction>> approvedTransactions;
+    private final Map<String, List<Transfer>> approvedtransfers;
 
     public Bank(Map<String, Account> currentAccounts, Map<String, List<Transaction>> approvedTransactions) {
         this.currentAccounts = currentAccounts;
         this.approvedTransactions = approvedTransactions;
+        this.approvedtransfers = HashMap.empty();
+    }
+
+    public Bank(Map<String, Account> currentAccounts, Map<String, List<Transaction>> approvedTransactions,
+                Map<String, List<Transfer>> approvedTransfers) {
+        this.currentAccounts = currentAccounts;
+        this.approvedTransactions = approvedTransactions;
+        this.approvedtransfers = approvedTransfers;
     }
 
     /**
@@ -23,7 +32,7 @@ public class Bank {
      * @return instance of the bank without a account and an empty list of approved transactions.
      */
     public static Bank init() {
-        return new Bank(HashMap.empty(), HashMap.empty());
+        return new Bank(HashMap.empty(), HashMap.empty(), HashMap.empty());
     }
 
     public boolean existAccount(String accountId) {
@@ -36,6 +45,16 @@ public class Bank {
 
     public Option<List<Transaction>> getApprovedTransactions(String accountId) {
         return approvedTransactions.get(accountId);
+    }
+
+    /**
+     * Gets the all the transfers for a given account.
+     *
+     * @param accountId The accountId that owns the transfer .
+     * @return The list of transfer for the specific account.
+     */
+    public Option<List<Transfer>> getApprovedTransfers(String accountId) {
+        return approvedtransfers.get(accountId);
     }
 
     /**
@@ -60,8 +79,11 @@ public class Bank {
      * @return a new bank instance with the account initialize.
      */
     private Bank initializeAccount(Account account) {
-        return new Bank(currentAccounts.put(account.getAccountId(), account),
-                approvedTransactions.put(account.getAccountId(), List.empty()));
+        return new Bank(
+                currentAccounts.put(account.getAccountId(), account),
+                approvedTransactions.put(account.getAccountId(), List.empty()),
+                approvedtransfers.put(account.getAccountId(), List.empty())
+        );
     }
 
     /**
@@ -79,6 +101,18 @@ public class Bank {
         Map<String, Account> newCurrentAccounts = currentAccounts.put(transaction.getAccountId(), accountWithLimitUpdated);
         List<Transaction> transactionsApproved = approvedTransactions.get(transaction.getAccountId()).get().append(transaction);
         Map<String, List<Transaction>> newTransactionsApproved = approvedTransactions.put(transaction.getAccountId(), transactionsApproved);
-        return new Bank(newCurrentAccounts, newTransactionsApproved);
+        return new Bank(newCurrentAccounts, newTransactionsApproved, approvedtransfers);
     }
+
+    public Bank updateAccountAndApprovedTransfer(Transfer transfer) {
+        Option<Account> currentAccountOption = currentAccounts.get(transfer.getAccountId());
+        Account currentAccount = currentAccountOption.get();
+        Account accountWithLimitUpdated = currentAccount.add(transfer);
+        Map<String, Account> newCurrentAccounts = currentAccounts.put(transfer.getAccountId(), accountWithLimitUpdated);
+        List<Transfer> transfersApproved = approvedtransfers.get(transfer.getAccountId()).get().append(transfer);
+        Map<String, List<Transfer>> newTransfersApproved = approvedtransfers.put(transfer.getAccountId(), transfersApproved);
+        return new Bank(newCurrentAccounts, approvedTransactions, newTransfersApproved);
+    }
+
+
 }

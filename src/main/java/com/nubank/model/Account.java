@@ -39,6 +39,10 @@ public final class Account implements OperationInfo {
         return new Account(accountId, activeCard, availableLimit - transactionToBeApproved.getAmount());
     }
 
+    public Account add(Transfer transfer) {
+        return new Account(accountId, activeCard, availableLimit + transfer.getAmount());
+    }
+
     public boolean isNotActive() {
         return !activeCard;
     }
@@ -75,4 +79,6 @@ public final class Account implements OperationInfo {
     public String getAccountId() {
         return accountId;
     }
+
+
 }

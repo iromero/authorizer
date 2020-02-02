@@ -173,8 +173,6 @@ public class ProcessInputOperationServiceTest {
         assertEquals(Violations.accountNotInitialized(), result.getViolations());
     }
 
-
-
     private Map<String, List<Transaction>> getApprovedTransactions() {
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionApproved1 = new Transaction("1", "Burger King", 20, dateTime);
