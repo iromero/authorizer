@@ -30,7 +30,7 @@ public class AuthorizerApplication {
                     // approved transaction list.
                 }
                 ProcessOutputOperationService processOutputOperationService = new ProcessOutputOperationService(
-                        bank.getCurrentAccount(result.getOperationInfo().getAccountId()).get(), result.getViolations());
+                        bank.getCurrentAccount(result.getOperationInfo().getAccountId()), result.getViolations());
                 System.out.println(processOutputOperationService.process());//Transform the object result to JSON
             }
         }
