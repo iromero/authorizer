@@ -25,6 +25,11 @@ public class Transaction implements OperationInfo {
         return accountId;
     }
 
+    @Override
+    public Bank updateInBank(Bank bank) {
+        return bank.update(this);
+    }
+
     public int getAmount() {
         return amount;
     }

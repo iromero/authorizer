@@ -33,7 +33,7 @@ public class BankTest {
                 LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0));
 
         //when
-        Bank bankUpdated = bank.updateAccountAndApprovedTransactions(transaction);
+        Bank bankUpdated = bank.update(transaction);
 
         //then
         Account accountWithLimitUpdated = bankUpdated.getCurrentAccount(transaction.getAccountId()).get();
@@ -49,7 +49,7 @@ public class BankTest {
                 LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0));
 
         //when
-        Bank bankUpdated = bank.updateAccountAndApprovedTransactions(transaction);
+        Bank bankUpdated = bank.update(transaction);
         List<Transaction> approvedTransactionsUpdated = bankUpdated.getApprovedTransactions(transaction.getAccountId()).get();
 
         //then
@@ -66,7 +66,7 @@ public class BankTest {
                 LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0));
 
         //when
-        Bank bankUpdated = bank.updateAccountAndApprovedTransfer(transfer);
+        Bank bankUpdated = bank.update(transfer);
 
         //then
         Account accountWithLimitUpdated = bankUpdated.getCurrentAccount(transfer.getAccountId()).get();
@@ -82,7 +82,7 @@ public class BankTest {
                 LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0));
 
         //when
-        Bank bankUpdated = bank.updateAccountAndApprovedTransfer(transfer);
+        Bank bankUpdated = bank.update(transfer);
         List<Transfer> approvedTransfersUpdated = bankUpdated.getApprovedTransfers(transfer.getAccountId()).get();
 
         //then

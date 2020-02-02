@@ -20,6 +20,11 @@ public class Transfer implements OperationInfo {
         return accountId;
     }
 
+    @Override
+    public Bank updateInBank(Bank bank) {
+        return bank.update(this);
+    }
+
     public String getSource() {
         return source;
     }

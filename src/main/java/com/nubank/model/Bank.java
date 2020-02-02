@@ -57,19 +57,16 @@ public class Bank {
         return approvedtransfers.get(accountId);
     }
 
-    /**
-     * Apply an bank operation.
-     *
-     * @param operationInfo The bank operation info. That is a account initialization or
-     *                      a transaction.
-     * @return a new bank instance with the account and approved transactions updated.
-     */
-    public Bank update(OperationInfo operationInfo) {
+    public Bank update(Account account) {
+        return initializeAccount(account);
+    }
 
-        if (!existAccount(operationInfo.getAccountId())) {
-            return initializeAccount((Account) operationInfo);
-        }
-        return updateAccountAndApprovedTransactions((Transaction) operationInfo);
+    public Bank update(Transaction transaction) {
+        return updateAccountAndApprovedTransactions(transaction);
+    }
+
+    public Bank update(Transfer transfer) {
+        return updateAccountAndApprovedTransfer(transfer);
     }
 
     /**
@@ -94,7 +91,7 @@ public class Bank {
      * @return a new instance of the bank that contains a new instances of the account with a new available limit
      * and a new instance of approved transactions that contains the new one.
      */
-    Bank updateAccountAndApprovedTransactions(Transaction transaction) {
+    private Bank updateAccountAndApprovedTransactions(Transaction transaction) {
         Option<Account> currentAccountOption = currentAccounts.get(transaction.getAccountId());
         Account currentAccount = currentAccountOption.get();
         Account accountWithLimitUpdated = currentAccount.debt(transaction);
@@ -104,7 +101,7 @@ public class Bank {
         return new Bank(newCurrentAccounts, newTransactionsApproved, approvedtransfers);
     }
 
-    public Bank updateAccountAndApprovedTransfer(Transfer transfer) {
+    private Bank updateAccountAndApprovedTransfer(Transfer transfer) {
         Option<Account> currentAccountOption = currentAccounts.get(transfer.getAccountId());
         Account currentAccount = currentAccountOption.get();
         Account accountWithLimitUpdated = currentAccount.add(transfer);
@@ -113,6 +110,5 @@ public class Bank {
         Map<String, List<Transfer>> newTransfersApproved = approvedtransfers.put(transfer.getAccountId(), transfersApproved);
         return new Bank(newCurrentAccounts, approvedTransactions, newTransfersApproved);
     }
-
 
 }

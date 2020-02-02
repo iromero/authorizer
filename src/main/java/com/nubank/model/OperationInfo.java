@@ -5,4 +5,6 @@ package com.nubank.model;
  */
 public interface OperationInfo {
     String getAccountId();
+
+    Bank updateInBank(Bank bank);
 }

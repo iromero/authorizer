@@ -26,7 +26,7 @@ public class AuthorizerApplication {
                 ProcessInputOperationService processInputOperationService = new ProcessInputOperationService(bank, bankOperationJson);
                 ProcessInputOperationResult result = processInputOperationService.process();
                 if (result.hasNotViolations()) {
-                    bank = bank.update(result.getOperationInfo());//Update the account available limit as well as the
+                    bank = result.getOperationInfo().updateInBank(bank);//Update the account available limit as well as the
                     // approved transaction list.
                 }
                 ProcessOutputOperationService processOutputOperationService = new ProcessOutputOperationService(

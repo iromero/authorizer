@@ -52,6 +52,11 @@ public final class Account implements OperationInfo {
     }
 
     @Override
+    public Bank updateInBank(Bank bank) {
+        return bank.update(this);
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -79,6 +84,5 @@ public final class Account implements OperationInfo {
     public String getAccountId() {
         return accountId;
     }
-
 
 }
