@@ -16,7 +16,7 @@ public class TransferOperation implements BankOperation {
 
     @Override
     public Violations process(Bank bank, BankOperationService service) {
-        return null;
+        return service.processOperation(bank, this);
     }
 
     @Override

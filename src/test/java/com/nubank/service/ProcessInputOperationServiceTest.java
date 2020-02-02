@@ -144,6 +144,36 @@ public class ProcessInputOperationServiceTest {
         assertEquals(Violations.maxAmountExpend(), result.getViolations());
     }
 
+    @Test
+    public void testNoViolationsWhenTryingTransferAuthorization() {
+        //given
+        Account currentAccount = new Account("1", true, 100);
+        Bank bank = new Bank(getCurrentAccounts(), getEmptyTransactionsForCurrentAccounts());
+        String transferOperationJson = "{\"transfer\": {\"accountId\":\"1\", \"source\": \"Davivienda bank\", \"amount\": 20, \"time\": \"2019-02-13T10:00:00.000Z\"}}";
+
+        //when
+        ProcessInputOperationService processInputOperationService = new ProcessInputOperationService(bank, transferOperationJson);
+        ProcessInputOperationResult result = processInputOperationService.process();
+
+        //then
+        assertEquals(Violations.noViolations(), result.getViolations());
+    }
+
+    @Test
+    public void testAccountNoInitializedWhenTryingTransferAuthorization() {
+        //given
+        Bank bank = Bank.init();//The account is not initialized.
+        String transferOperationJson = "{\"transfer\": {\"accountId\":\"1\", \"source\": \"Davivienda Bank\", \"amount\": 20, \"time\": \"2019-02-13T10:00:00.000Z\"}}";
+
+        //when
+        ProcessInputOperationService processInputOperationService = new ProcessInputOperationService(bank, transferOperationJson);
+        ProcessInputOperationResult result = processInputOperationService.process();
+
+        //then
+        assertEquals(Violations.accountNotInitialized(), result.getViolations());
+    }
+
+
 
     private Map<String, List<Transaction>> getApprovedTransactions() {
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
