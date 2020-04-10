@@ -18,7 +18,7 @@ public class BankOperationJsonBuilderFactoryTest {
     @Test
     public void testAccountDeserializer() {
         //given
-        String json = "{\"account\":{\"active-card\":true,\"available-limit\":100},\"violations\":[]}";
+        String json = "{\"account\":{\"premium\":true,\"active-card\":true,\"available-limit\":100},\"violations\":[]}";
 
         //when
         BankOperation bankOperation = new BankOperationJsonBuilderFactory().fromJson(json);
@@ -29,6 +29,7 @@ public class BankOperationJsonBuilderFactoryTest {
         Account account = (Account) operation.getOperationInfo();
         assertEquals(100, account.getAvailableLimit());
         assertEquals(true, account.isActiveCard());
+        assertEquals(true, account.isPremium());
     }
 
     @Test
@@ -59,7 +60,7 @@ public class BankOperationJsonBuilderFactoryTest {
         String accountJson = new BankOperationJsonBuilderFactory().toJson(operation);
 
         //then
-        String accountJsonExpected = "{\"account\":{\"active-card\":true,\"available-limit\":100},\"violations\":[]}";
+        String accountJsonExpected = "{\"account\":{\"active-card\":true,\"available-limit\":100,\"premium\":false},\"violations\":[]}";
         assertEquals(accountJsonExpected, accountJson);
     }
 

@@ -20,7 +20,7 @@ public class ProcessOutputOperationServiceTest {
         String jsonOutputResult = processOutputOperationService.process();
 
         //then
-        String jsonOutputExpected = "{\"account\":{\"active-card\":true,\"available-limit\":100},\"violations\":[]}";
+        String jsonOutputExpected = "{\"account\":{\"active-card\":true,\"available-limit\":100,\"premium\":false},\"violations\":[]}";
         assertEquals(jsonOutputExpected, jsonOutputResult);
     }
 
@@ -35,7 +35,7 @@ public class ProcessOutputOperationServiceTest {
         String jsonOutputResult = processOutputOperationService.process();
 
         //then
-        String jsonOutputExpected = "{\"account\":{\"active-card\":true,\"available-limit\":100}," +
+        String jsonOutputExpected = "{\"account\":{\"active-card\":true,\"available-limit\":100,\"premium\":false}," +
                 "\"violations\":[\"insufficient-limit\",\"high-frequency-small-interval\"]}";
         assertEquals(jsonOutputExpected, jsonOutputResult);
     }

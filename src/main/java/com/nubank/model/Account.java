@@ -12,10 +12,18 @@ public final class Account implements OperationInfo {
     private final boolean activeCard;
     @SerializedName("available-limit")
     private final int availableLimit;
+    private final boolean premium;
 
     public Account(boolean activeCard, int availableLimit) {
         this.activeCard = activeCard;
         this.availableLimit = availableLimit;
+        this.premium = false;
+    }
+
+    public Account(boolean activeCard, int availableLimit, boolean premium) {
+        this.activeCard = activeCard;
+        this.availableLimit = availableLimit;
+        this.premium = premium;
     }
 
     public boolean isActiveCard() {
@@ -64,5 +72,13 @@ public final class Account implements OperationInfo {
                 "activeCard=" + activeCard +
                 ", availableLimit=" + availableLimit +
                 '}';
+    }
+
+    public boolean isPremium() {
+        return premium;
+    }
+
+    public boolean isNotPremium() {
+        return !premium;
     }
 }

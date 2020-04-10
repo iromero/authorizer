@@ -107,6 +107,23 @@ public class TransactionAuthorizationServiceTest {
         assertEquals(Violations.accountWithDoubleTransaction(), violations);
     }
 
+    @Test
+    public void testDoubledTransactionWhenAccountIsPremium() {
+        //given
+        Account currentAccount = new Account(true, 100, true);
+        List<Transaction> approvedTransactions = getApprovedTransactions();
+        LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 2, 55, 0);
+        Transaction transactionToBeApproved = new Transaction("Mac Donall's", 20, dateTime);
+        Bank bank = new Bank(currentAccount, approvedTransactions);
+
+        //when
+        Violations violations = new TransactionAuthorizationService(bank, transactionToBeApproved).evalOperation();
+
+        //then
+        assertEquals(Violations.noViolations(), violations);
+    }
+
+
     private List<Transaction> getApprovedTransactions() {
         LocalDateTime dateTime = LocalDateTime.of(2019, Month.FEBRUARY, 13, 10, 0, 0, 0);
         Transaction transactionApproved1 = new Transaction("Burger King", 20, dateTime);

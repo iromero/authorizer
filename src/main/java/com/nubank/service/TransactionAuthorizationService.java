@@ -14,11 +14,22 @@ public class TransactionAuthorizationService implements OperationService {
     private final Bank bank;
     private final Transaction transactionToBeApproved;
     private final List<TransactionBusinessRule> businessRules;
+    private final List<TransactionBusinessRule> premiumBusinessRules;
 
     public TransactionAuthorizationService(Bank bank, Transaction transactionToBeApproved) {
         this.bank = bank;
         this.transactionToBeApproved = transactionToBeApproved;
         this.businessRules = buildBusinessRules();
+        this.premiumBusinessRules = buildPremiumBusinessRules();
+    }
+
+    private List<TransactionBusinessRule> buildPremiumBusinessRules() {
+        List<TransactionBusinessRule> businessRuleList = List.of(
+                new AccountNotInitializedTransactionRule(),
+                new AccountNoActiveTransactionRule(),
+                new InsufficientLimitsTransactionTransactionRule()
+        );
+        return businessRuleList;
     }
 
     /**
@@ -28,9 +39,6 @@ public class TransactionAuthorizationService implements OperationService {
      */
     public List<TransactionBusinessRule> buildBusinessRules() {
         List<TransactionBusinessRule> businessRuleList = List.of(
-                new AccountNotInitializedTransactionRule(),
-                new AccountNoActiveTransactionRule(),
-                new InsufficientLimitsTransactionTransactionRule(),
                 new DoubleTransactionTransactionRule(),
                 new HighFrequencySmallIntervalTransactionTransactionRule()
         );
@@ -44,10 +52,28 @@ public class TransactionAuthorizationService implements OperationService {
      */
     @Override
     public Violations evalOperation() {
+        Violations violations = evalPremiumBusinessRules();
+        if (bank.existAccount() && bank.getCurrentAccount().isNotPremium()) {
+            violations = evalDefaultBusinessRules().append(violations);
+        }
+        return violations;
+    }
+
+    public Violations evalPremiumBusinessRules() {
+        Violations violations = new Violations();
+        for (TransactionBusinessRule businessRule : premiumBusinessRules) {
+            violations = violations.append(businessRule.evalOperation(bank, transactionToBeApproved));
+        }
+        return violations;
+    }
+
+    public Violations evalDefaultBusinessRules() {
         Violations violations = new Violations();
         for (TransactionBusinessRule businessRule : businessRules) {
             violations = violations.append(businessRule.evalOperation(bank, transactionToBeApproved));
         }
         return violations;
     }
+
+
 }

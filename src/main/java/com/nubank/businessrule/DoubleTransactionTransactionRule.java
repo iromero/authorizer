@@ -22,7 +22,8 @@ public class DoubleTransactionTransactionRule implements TransactionBusinessRule
      */
     @Override
     public Violations evalOperation(Bank bank, Transaction transactionToBeApproved) {
-        if (doesItViolatesDoubleTransaction(bank, transactionToBeApproved)) {
+
+        if ( doesItViolatesDoubleTransaction(bank, transactionToBeApproved)) {
             return Violations.accountWithDoubleTransaction();
         }
         return Violations.noViolations();
