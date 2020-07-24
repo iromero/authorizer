@@ -2,28 +2,29 @@
 
 <h2>Instructions to build the application</h2>
 <h3>Prerequisites</h3>
-You will need to have maven 3 and java 8 installed to be able to build the application.
+You will need to have docker installed
 
 <ul>
-<li>Simple Instructions to install maven 3+: https://maven.apache.org/install.html</li>
-
-<li>Simple instructions to install java 8: https://www.java.com/en/download/help/linux_x64_install.xml</li> 
+<li>Simple Instructions to install docker on Windows: https://docs.docker.com/docker-for-windows/install/</li>
+<li>Simple Instructions to install docker on Mac: https://docs.docker.com/docker-for-mac/install/</li>
 </ul>
 
 
 <h3>Building the application</h3>
-Open a terminal and in the root of the application folder:
+Open a docker terminal and in the root of the application folder build the docker image in the following way:
 
-mvn clean package
+docker build -t ixaviers:authorizer .
 
 <h2>Instructions to run the application</h2>
 
-There are two ways to run and test the application.
+First you need to run docker container for the image:
 
-In the root of the application folder you  can run the application in one of the two following ways:
+docker container run -it ixaviers:authorizer
+
+After that there are two ways to run and test the application:
 
 <ol>
-<li>java -jar target/Authorizer-1.0-shaded.jar < fileContainingJsons
+<li>java -jar target/Authorizer-1.0-shaded.jar < /usr/app/src/main/resources/severalTransactions
 </li>
 <li>java -jar target/Authorizer-1.0-shaded.jar</li>
 </ol>
@@ -31,7 +32,7 @@ In the root of the application folder you  can run the application in one of the
 <h3>First way</h3>
 The first way process a file containing bank operations in json format , once per line. The program will no process more inputs after it finish to process the file. For example:
 
-java -jar target/Authorizer-1.0-shaded.jar < /usr/data/severalTransactions
+java -jar target/Authorizer-1.0-shaded.jar < /usr/app/src/main/resources/severalTransactions
 
 <h3>Second way</h3>
 In The second way once you execute the application you can start entering in a manual way the json text that you want to process. The program will finish one you enter the word "stop". For example:
