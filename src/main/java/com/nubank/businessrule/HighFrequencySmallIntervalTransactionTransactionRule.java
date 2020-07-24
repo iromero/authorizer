@@ -5,6 +5,7 @@ import com.nubank.model.Transaction;
 import com.nubank.model.Violations;
 
 import java.time.Duration;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Business rule that validates there are not more than 3 transactions on a 2 minutes interval.
@@ -33,15 +34,15 @@ public class HighFrequencySmallIntervalTransactionTransactionRule implements Tra
 
     private boolean doesItViolatesHighFrequencySmallInterval(Bank bank, Transaction transactionToBeApproved) {
 
-        NumberOfTransactionsCounter numberOfTransactionsInLessThanTwoMinutes = new NumberOfTransactionsCounter(0);
+        AtomicInteger numberOfTransactionsInLessThanTwoMinutes = new AtomicInteger();
 
         for (Transaction transactionApproved : bank.getApprovedTransactions(transactionToBeApproved.getAccountId()).get()) {
             Duration duration = Duration.between(transactionApproved.getTime(), transactionToBeApproved.getTime()).abs();
             if (duration.getSeconds() <= MAX_TRANSACTION_INTERVAL_TIME) {
-                numberOfTransactionsInLessThanTwoMinutes = numberOfTransactionsInLessThanTwoMinutes.increment();
+                numberOfTransactionsInLessThanTwoMinutes.getAndIncrement();
             }
         }
         // Number of already transactions approved in less than two minutes taking as reference the incoming transaction.
-        return numberOfTransactionsInLessThanTwoMinutes.isCounterBiggerEqualThan(HIGH_FREQUENCY_SMALL_INTERVAL);
+        return numberOfTransactionsInLessThanTwoMinutes.get() >= HIGH_FREQUENCY_SMALL_INTERVAL;
     }
 }
